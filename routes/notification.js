@@ -10,11 +10,10 @@ router.get("/:notificationID", async (req, res) => {
         const foundNotification = await Notification.findById(notificationID)
         if (!foundNotification)
             return res.status(400).json(`Notification ${notificationID} not found`);
-
-        console.log("test github => ", foundNotification)
         res.send(foundNotification)
     }
     catch (err) {
+        console.log("catch error")
         res.json(err);
     }
 });
