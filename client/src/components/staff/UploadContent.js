@@ -71,6 +71,7 @@ export default function FormDialog({ isOpen, isClosed, folderChanged, courseID }
             console.log(res.data)
 
             setOpen(false)
+            isClosed()
             setOpenMessage(true)
             setMessageText(`content uploaded successfully !`)
             folderChanged(true);

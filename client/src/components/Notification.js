@@ -46,6 +46,7 @@ import Box from '@material-ui/core/Box';
 import PostContentDiscussion from "./PostContentDiscussion";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import Grid from '@material-ui/core/Grid';
 import { Redirect } from 'react-router'
 import {
     BrowserRouter as Router,
@@ -87,23 +88,27 @@ const useStyles = makeStyles((theme) => ({
         top: "50%",
         bottom: "50%",
         right: "0%",
-    }
+    },
+    large: {
+        width: theme.spacing(7),
+        height: theme.spacing(7),
+    },
 }));
 
-function studentORInstructor(role) {
+function studentORInstructor(role, text) {
     if (role === "student")
         return (
             <Tooltip title="Student" arrow>
-                <Avatar aria-label="recipe" style={{ backgroundColor: yellow[600] }}>
-                    S
+                <Avatar aria-label="recipe" style={{ backgroundColor: yellow[600], width: 48, height: 48 }}>
+                    {text.charAt(0).toUpperCase()}
                 </Avatar>
             </Tooltip>
         )
     if (role === "staff")
         return (
             <Tooltip title="Instructor" arrow>
-                <Avatar aria-label="recipe" style={{ backgroundColor: red[600] }}>
-                    I
+                <Avatar aria-label="recipe" style={{ backgroundColor: red[600], width: 48, height: 48 }}>
+                    {text.charAt(0).toUpperCase()}
                 </Avatar>
             </Tooltip>
         )
@@ -133,6 +138,8 @@ const Notification = ({ notificationID }) => {
     const userID = localStorage.getItem('userID')
 
     let history = useHistory()
+    let params = useParams()
+    // console.log("🚀 ~ file: Notification.js ~ line 142 ~ Notification ~ params", params)
 
     const auth = {
         headers: { token }
@@ -146,7 +153,7 @@ const Notification = ({ notificationID }) => {
             })
             .catch(err => console.log(err.response.data))
 
-    }, [notificationData])
+    }, [])
 
     const handleClick = () => {
         if (notificationData.type === "discussion") {
@@ -210,20 +217,26 @@ const Notification = ({ notificationID }) => {
                 >
                     {/* <CardHeader
 
-                        avatar={studentORInstructor(notificationData.role)}
-                        action={toggleSettings()}
-                        // title={`${discussionData.author.firstName} ${discussionData.author.lastName}`}
+                        avatar={studentORInstructor(notificationData.role, notificationData.text)}
+                        // action={toggleSettings()}
+                        title={notificationData.type + " notification"}
                         subheader={`${notificationData.date}`}
                     /> */}
 
                     <CardContent>
-                        <Typography variant="h6" component="p">
-                            {notificationData.text}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" color="textSecondary">
-                            {notificationData.date}
-                        </Typography>
+                        <Grid container rowSpacing={0} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            <Grid item xs={1} style={{ flexBasis: "5.333333%" }}>
+                                {studentORInstructor(notificationData.role, notificationData.text)}
+                            </Grid>
+                            <Grid item xs={11}>
+                                <Typography variant="h6" component="p">
+                                    {notificationData.text}
+                                </Typography>
+                                <Typography variant="body1" component="p" color="textSecondary">
+                                    {notificationData.date}
+                                </Typography>
+                            </Grid>
+                        </Grid>
                         {/* {toggleSettings()} */}
                     </CardContent>
                 </Card>
