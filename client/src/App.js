@@ -100,7 +100,7 @@ function App() {
           {
             token && role !== "admin" ?
               <HomeStudent token={token} userID={userID} selectedTab={0} search={false} />
-               : <Redirect to="/login" />
+              : <Redirect to="/login" />
           }
         </Route>
 
@@ -131,7 +131,7 @@ function App() {
         <Route exact path="/notifications">
           {
             token ?
-              <HomeStudent token={token} userID={userID} selectedTab={2} />
+              <HomeStudent token={token} userID={userID} selectedTab={3} />
               : <Redirect to="/login" />
           }
         </Route>
@@ -156,6 +156,14 @@ function App() {
           {
             token ?
               <HomeStudent token={token} userID={userID} selectedTab={0} search={true} />
+              : <Redirect to="/login" />
+          }
+        </Route>
+
+        <Route exact path="/announcements">
+          {
+            token ?
+              <HomeStudent token={token} userID={userID} selectedTab={2} />
               : <Redirect to="/login" />
           }
         </Route>
@@ -228,6 +236,13 @@ function App() {
         </Route>
 
         <Route exact path="/notifications">
+          {
+            token ?
+              <HomeStaff token={token} userID={userID} selectedTab={3} />
+              : <Redirect to="/login" />
+          }
+        </Route>
+        <Route exact path="/announcements">
           {
             token ?
               <HomeStaff token={token} userID={userID} selectedTab={2} />

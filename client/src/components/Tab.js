@@ -18,6 +18,7 @@ import ContentDiscussion from "./ContentDiscussion";
 import { useHistory } from "react-router";
 import Discussion from "./Discussion";
 import { useLocation, useParams } from "react-router-dom";
+import CourseAnnouncement from "./CourseAnnouncement"
 
 
 function TabPanel(props) {
@@ -78,6 +79,10 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
         history.push("/discussion")
     }
 
+    const handleClickCourseAnnouncement = () => {
+        history.push("/announcements")
+    }
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -96,7 +101,8 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
                 <Tabs centered value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="Dashboard" onClick={handleClickDashboard}  {...a11yProps(0)} />
                     <Tab label="Discussion" onClick={handleClickDiscussion} default {...a11yProps(1)} />
-                    <Tab label="Notifications" onClick={handleClickNotifications} {...a11yProps(2)} />
+                    <Tab label="Announcements" onClick={handleClickCourseAnnouncement} {...a11yProps(2)} />
+                    <Tab label="Notifications" onClick={handleClickNotifications} {...a11yProps(3)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
@@ -106,8 +112,12 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
                 {notification ? <Discussion discussionID={discussionID} /> : type === "general" ? <AllDiscussions /> : <ContentDiscussion />}
             </TabPanel>
             <TabPanel value={value} index={2}>
+                <CourseAnnouncement />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
                 <NotificationPage />
             </TabPanel>
+
 
         </div>
     );

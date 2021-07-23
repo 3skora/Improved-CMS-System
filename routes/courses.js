@@ -5,6 +5,8 @@ const User = require("../models/User");
 const Department = require("../models/Department");
 const Semester = require("../models/Semester");
 const Folder = require("../models/Folder");
+const Notification = require("../models/Notification")
+
 const { deleteCourse, deleteContent, getAllBelow } = require("../helpers")
 
 
@@ -322,6 +324,211 @@ router.get("/test/:folderID", async (req, res) => {
 
 })
 
+// =================== course Announcements ==========
+
+router.get("/courseAnnouncements/:userID", async (req, res) => {
+    try {
+        const { userID } = req.params
+        const foundUser = await User.findById(userID)
+        if (!foundUser)
+            return res.status(400).json(`user ${userID} not found`);
+        let result = [];
+        for (const courseID of foundUser.courses) {
+            const courseDetails = await Course.findById(courseID, { courseAnnouncement: 1, name: 1, _id: 1, code: 1 })
+            // courseDetails.courseAnnouncement.reverse()
+            result.push(courseDetails)
+        }
+        res.json(result)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+
+
+});
+
+router.post("/courseAnnouncements", async (req, res) => {
+    try {
+        const { newAnnouncement, courseID, author } = req.body
+        if (!newAnnouncement)
+            return res.status(400).json("newAnnouncement is required");
+
+        if (!courseID)
+            return res.status(400).json("courseID is required");
+
+        if (!author)
+            return res.status(400).json("author is required");
+
+
+
+        const foundCourse = await Course.findByIdAndUpdate(courseID,
+            { $push: { courseAnnouncement: { $each: [newAnnouncement], $position: 0 } } },
+            { new: true, runValidators: true, useFindAndModify: true })
+
+        const foundAuthor = await User.findById(author)
+        const courseNameCode = `${foundCourse.name} (${foundCourse.code})`
+        const notificationDetails = `to ${courseNameCode} course`
+
+        //add notification
+        const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
+        const NotificationType = "course"
+        const text = `${authorFullName} added a new announcement ${notificationDetails}`
+        const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
+        const savedNotification = await newNotification.save()
+
+        //send the notification 
+        const studentsArr = foundCourse.students
+        const staffArr = foundCourse.staff
+
+        for (const studentID of studentsArr) {
+            if (studentID != author) {
+                await User.findByIdAndUpdate(studentID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        for (const staffID of staffArr) {
+            if (staffID != author) {
+                await User.findByIdAndUpdate(staffID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        res.json(foundCourse.courseAnnouncement)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+
+
+});
+
+router.patch("/courseAnnouncements", async (req, res) => {
+    try {
+        const { newAnnouncement, courseID, index, author } = req.body
+        if (!newAnnouncement)
+            return res.status(400).json("newAnnouncement is required");
+
+        if (!courseID)
+            return res.status(400).json("courseID is required");
+
+        if (!index)
+            return res.status(400).json("index is required");
+
+        if (!author)
+            return res.status(400).json("author is required");
+
+        // const courseAnnouncementArr = (await Course.findById(courseID)).courseAnnouncement
+        // courseAnnouncementArr[index] = newAnnouncement
+
+        const foundCourse = await Course.findByIdAndUpdate(courseID,
+            { $set: { [`courseAnnouncement.${index}`]: newAnnouncement } },
+            // { courseAnnouncement: courseAnnouncementArr },
+            { new: true, runValidators: true, useFindAndModify: true })
+
+
+        const foundAuthor = await User.findById(author)
+        const courseNameCode = `${foundCourse.name} (${foundCourse.code})`
+        const notificationDetails = `of ${courseNameCode} course`
+
+        //add notification
+        const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
+        const NotificationType = "course"
+        const text = `${authorFullName} updated the announcements ${notificationDetails}`
+        const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
+        const savedNotification = await newNotification.save()
+
+        //send the notification 
+        const studentsArr = foundCourse.students
+        const staffArr = foundCourse.staff
+
+        for (const studentID of studentsArr) {
+            if (studentID != author) {
+                await User.findByIdAndUpdate(studentID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        for (const staffID of staffArr) {
+            if (staffID != author) {
+                await User.findByIdAndUpdate(staffID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        res.json(foundCourse.courseAnnouncement)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+
+
+});
+
+router.delete("/courseAnnouncements/delete", async (req, res) => {
+    try {
+        const { courseID, index, author } = req.body
+        if (!courseID)
+            return res.status(400).json("courseID is required");
+
+        if (!index)
+            return res.status(400).json("index is required");
+
+        if (!author)
+            return res.status(400).json("author is required");
+        // const courseAnnouncementArr = (await Course.findById(courseID)).courseAnnouncement
+        // courseAnnouncementArr[index] = newAnnouncement
+
+        await Course.findByIdAndUpdate(courseID,
+            // { $set: { edit : newAnnouncement } },
+            { $unset: { [`courseAnnouncement.${index}`]: 1 } },
+            { new: true, runValidators: true, useFindAndModify: true })
+
+        const foundCourse = await Course.findByIdAndUpdate(courseID,
+            // { $set: { edit : newAnnouncement } },
+            { $pull: { "courseAnnouncement": null } },
+            { new: true, runValidators: true, useFindAndModify: true })
+
+
+        const foundAuthor = await User.findById(author)
+        const courseNameCode = `${foundCourse.name} (${foundCourse.code})`
+        const notificationDetails = `of ${courseNameCode} course`
+
+        //add notification
+        const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
+        const NotificationType = "course"
+        const text = `${authorFullName} updated the announcements ${notificationDetails}`
+        const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
+        const savedNotification = await newNotification.save()
+
+        //send the notification 
+        const studentsArr = foundCourse.students
+        const staffArr = foundCourse.staff
+
+        for (const studentID of studentsArr) {
+            if (studentID != author) {
+                await User.findByIdAndUpdate(studentID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        for (const staffID of staffArr) {
+            if (staffID != author) {
+                await User.findByIdAndUpdate(staffID, { $addToSet: { notifications: [savedNotification._id] } },
+                    { new: true, runValidators: true, useFindAndModify: true })
+            }
+
+        }
+
+        res.json(foundCourse.courseAnnouncement)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+
+
+});
 
 
 

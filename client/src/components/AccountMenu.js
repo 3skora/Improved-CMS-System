@@ -89,11 +89,9 @@ export default function AccountMenu() {
                     <ListItemIcon style={{ minWidth: "40px" }}>
                         <ExitToAppRoundedIcon fontSize="small" />
                     </ListItemIcon>
-
-                    <Typography style={{marginRight: "10px" }}>
+                    <Typography style={{ marginRight: "10px" }}>
                         Logout
                     </Typography>
-
                 </MenuItem>
             </Menu>
         </React.Fragment>

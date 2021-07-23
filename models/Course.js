@@ -6,7 +6,7 @@ const courseSchema = mongoose.Schema({
         type: String,
         unique: true,
     },
-    courseAnnouncement: String,
+    courseAnnouncement: [String],
     department: {
         type: mongoose.Types.ObjectId,
         ref: "Department",

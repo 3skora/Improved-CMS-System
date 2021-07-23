@@ -59,17 +59,7 @@ router.get("/users/:userID", async (req, res) => {
         let result = [];
         for (const courseID of foundUser.courses) {
             const courseDetails = await Course.findById(courseID, { discussion: 1, name: 1, _id: 1, code: 1 })
-            // .populate({
-            //     path: 'discussion',
-            //     populate: { path: 'author' }
-            // });
-            // .populate("semester")
-            // .populate("rootFolder", "folderName")
-            // .populate({
-            //     path: 'rootFolder',
-            //     populate: { path: 'subFolders' }
-            // });
-
+            courseDetails.discussion.reverse()
             result.push(courseDetails)
         }
         res.json(result)
