@@ -74,6 +74,15 @@ const useStyles = makeStyles((theme) => ({
     myDivider: {
         margin: "10px 0px",
         border: `1px solid ${theme.palette.divider}`
+    },
+    threeDots: {
+        display: "flex",
+        alignItems: "center",
+        margin: "auto",
+        position: "absolute",
+        top: "50%",
+        bottom: "50%",
+        right: "0%",
     }
 }));
 

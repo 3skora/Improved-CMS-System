@@ -21,11 +21,6 @@ mark{
   text-decoration: underline; 
 }
 
-body {
-  background: #f3f1f2;
-  font-family: sans-serif;
-}
-
 
 
 .app .ql-container {
@@ -55,4 +50,13 @@ body {
 .themeSwitcher {
   margin-top: 0.5em;
   font-size: small;
+}
+
+.containerPlayer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.plyr {
+  border-radius: 4px;
+  margin-bottom: 15px;
 }

@@ -13,6 +13,7 @@ import NotificationPage from './NotificationPage'
 import AllDiscussions from "./AllDiscussions"
 import SearchResult from "./SearchResult"
 import Watch from "./Watch"
+import VideoPlayer from "./VideoPlayer"
 import Search from "./Search"
 import ContentDiscussion from "./ContentDiscussion";
 import { useHistory } from "react-router";
@@ -106,7 +107,7 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} >
-                {search ? <SearchResult /> : watch ? <Watch /> : <Dashboard />}
+                {search ? <SearchResult /> : watch ? <VideoPlayer /> : <Dashboard />}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {notification ? <Discussion discussionID={discussionID} /> : type === "general" ? <AllDiscussions /> : <ContentDiscussion />}
