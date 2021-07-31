@@ -9,11 +9,18 @@ const User = () => {
     const [gucID, setGucID] = useState("");
     // const [result, setResult] = useState(null)
 
+    const token = localStorage.getItem('token')
+    const userID = localStorage.getItem('userID')
+
+    const auth = {
+        headers: { token }
+    }
+
     const handelSubmit = (e) => {
         e.preventDefault();
 
-        const data = { firstName, lastName, email, role, gucID };
-        axios.post("http://localhost:8080/users/", data)
+        const data = { firstName, lastName, email, role, gucID , password:"12345678" };
+        axios.post("http://localhost:8080/users/", data, auth)
             .then((res) => console.log(res.data))
             .catch((err) => console.log(err.response.data));
 

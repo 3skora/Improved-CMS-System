@@ -71,12 +71,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function studentORInstructor(role) {
+function studentORInstructor(role, firstChar) {
     if (role === "student")
         return (
             <Tooltip title="Student" arrow>
                 <Avatar aria-label="recipe" style={{ backgroundColor: yellow[600] }}>
-                    S
+                    {firstChar}
                 </Avatar>
             </Tooltip>
         )
@@ -84,7 +84,7 @@ function studentORInstructor(role) {
         return (
             <Tooltip title="Instructor" arrow>
                 <Avatar aria-label="recipe" style={{ backgroundColor: red[600] }}>
-                    I
+                    {firstChar}
                 </Avatar>
             </Tooltip>
         )
@@ -278,7 +278,7 @@ export default function Discussion({ discussionID }) {
                 <Card className={classes.root}>
                     <CardHeader
 
-                        avatar={studentORInstructor(discussionData.author.role)}
+                        avatar={studentORInstructor(discussionData.author.role, discussionData.author.firstName.charAt(0))}
                         action={toggleSettings(role, discussionData.author._id)}
                         title={`${discussionData.author.firstName} ${discussionData.author.lastName}`}
                         subheader={`${discussionData.date} ${discussionData.edited ? "(edited)" : ""}`}

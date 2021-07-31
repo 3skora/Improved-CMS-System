@@ -32,7 +32,7 @@ router.get("/allStaff", async (req, res) => {
 //     "role" : "student",
 //     "gucID" : "43-18023"
 // }
-router.post("/", authAdmin, async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { error } = userValidation(req.body);
         if (error) {

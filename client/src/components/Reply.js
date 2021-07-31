@@ -56,12 +56,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function studentORInstructor(role) {
+function studentORInstructor(role, firstChar) {
     if (role === "student")
         return (
             <Tooltip title="Student" arrow>
                 <Avatar aria-label="recipe" style={{ backgroundColor: yellow[600] }}>
-                    S
+                    {firstChar}
                 </Avatar>
             </Tooltip>
         )
@@ -69,7 +69,7 @@ function studentORInstructor(role) {
         return (
             <Tooltip title="Instructor" arrow>
                 <Avatar aria-label="recipe" style={{ backgroundColor: red[600] }}>
-                    I
+                    {firstChar}
                 </Avatar>
             </Tooltip>
         )
@@ -220,7 +220,7 @@ const Reply = ({ replyID, commentID, postID }) => {
             {replyData &&
                 <Card className={classes.root}>
                     <CardHeader
-                        avatar={studentORInstructor(replyData.author.role)}
+                        avatar={studentORInstructor(replyData.author.role, replyData.author.firstName.charAt(0))}
                         action={toggleSettings(role, replyData.author._id)}
                         title={`${replyData.author.firstName} ${replyData.author.lastName}`}
                         subheader={`${replyData.date} ${replyData.edited ? "(edited)" : ""}`}

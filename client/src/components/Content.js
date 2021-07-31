@@ -37,6 +37,10 @@ const useStyles = makeStyles((theme) => ({
             // backgroundColor: "crimson"
         }
     },
+
+    content: {
+        margin: 2
+    },
 }));
 
 const ContentCard = ({ contentID, token, searchText }) => {
@@ -110,28 +114,31 @@ const ContentCard = ({ contentID, token, searchText }) => {
 
         <>
             {content &&
-                <Card className="card mb-2"
-                >
-                    <CardContent>
-                        <h3 className="card-title text-center">{highlightText(content.title)}</h3>
-                        <p className="card-text"><b>Uploaded At: </b>{content.date}</p>
-                        <p className="card-text"><b>Uploaded By: </b>{content.author.firstName} {content.author.lastName}</p>
-                        <p className="card-text"><b>Tags: </b>{searchText ? highlightText(content.tag) : tagText(content.tag)}</p>
+                <div className={`col-sm-12 col-lg-6 col-xl-4`}>
 
-                    </CardContent>
-                    <CardActions style={{ justifyContent: "center" }}>
-                        {videoBtn(content.file.mimetype)}
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.buttonDiscussion}
-                            startIcon={<ForumRoundedIcon />}
-                            href={`/discussion/content/${contentID}`}
-                        >
-                            Discussion
-                        </Button>
-                    </CardActions>
-                </Card>
+                    <Card className={`card mb-3`}
+                    >
+                        <CardContent>
+                            <h3 className="card-title text-center">{highlightText(content.title)}</h3>
+                            <p className="card-text"><b>Uploaded At: </b>{content.date}</p>
+                            <p className="card-text"><b>Uploaded By: </b>{content.author.firstName} {content.author.lastName}</p>
+                            <p className="card-text"><b>Tags: </b>{searchText ? highlightText(content.tag) : tagText(content.tag)}</p>
+
+                        </CardContent>
+                        <CardActions style={{ justifyContent: "center" }}>
+                            {videoBtn(content.file.mimetype)}
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.buttonDiscussion}
+                                startIcon={<ForumRoundedIcon />}
+                                href={`/discussion/content/${contentID}`}
+                            >
+                                Discussion
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </div>
             }
         </>
 

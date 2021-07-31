@@ -386,11 +386,11 @@ const Dashboard = () => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className="container">
-                                <div className="row">
+                                <div className="row gx-4">
                                     {
                                         contents.map(content => {
                                             return <Content
-                                                className="col"
+                                                // className="col"
                                                 key={content}
                                                 contentID={content}
                                                 token={token}
