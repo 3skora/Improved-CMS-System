@@ -131,8 +131,8 @@ const AllDiscussions = () => {
 
                         {allCourses.map((course, index) => {
                             return <TabPanel value={value} index={index} className="col-10 col-sm-9 col-md-10">
-                                {(course.discussion).map((discussionID, index2) => {
-                                    return <Discussion key={index2} discussionID={discussionID} />
+                                {(course.discussion).map(discussionID => {
+                                    return <Discussion key={discussionID} discussionID={discussionID} />
                                 })}
                             </TabPanel>
                         })}
