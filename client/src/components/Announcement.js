@@ -27,11 +27,13 @@ import {
 const useStyles = makeStyles((theme) => ({
     root: {
         // display: "inline-block",
-        width: 1200,
-        margin: "0px 15px 30px",
-        // borderLeft: "8px solid #ccc",
+        // width: 1200,
+        margin: "0px 1.5% 1.8%",
+        // borderLeft: "8px solid crimson",
         borderRadius: 5,
         position: "relative",
+        padding: 0
+
     },
     threeDots: {
         display: "flex",
@@ -95,7 +97,7 @@ const Announcement = ({ text }) => {
     }
 
     return (
-        <div>
+        <div className="row">
             <Card
                 className={classes.root}
             >

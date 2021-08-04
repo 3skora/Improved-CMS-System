@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
         // height: 224,
         direction: "row-reverse",
         justify: "flex-start",
-        // paddingLeft: 0,
+        paddingLeft: 0,
 
 
     },
@@ -101,46 +101,48 @@ const CourseAnnouncement = () => {
 
 
     return (
-        <div>
-            {allAnnouncements &&
-                <div className={classes.root}>
-                    <Tabs
-                        orientation="vertical"
-                        value={value}
-                        onChange={handleChange}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
+        <div className="container-fluid">
+            <div className="row">
+                {allAnnouncements &&
+                    <div className={classes.root}>
+                        <Tabs
+                            orientation="vertical"
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="Vertical tabs example"
+                            className={`${classes.tabs} col-3 col-sm-3 col-md-2`}
 
-                    >
+                        >
+                            {allAnnouncements.map((course, index) => {
+                                return <Tab key={index} label={`${course.name} (${course.code})`} {...a11yProps(index)} />
+                            })}
+
+                            {role === "staff" && <Divider className={classes.myDivider} component="p" variant="middle" />}
+                            {role === "staff" && <Tab label="Add New Announcement" {...a11yProps(allAnnouncements.length + 1)} />}
+
+                        </Tabs>
+
+
                         {allAnnouncements.map((course, index) => {
-                            return <Tab key={index} label={`${course.name} (${course.code})`} {...a11yProps(index)} />
+                            return <TabPanel value={value} index={index} className="col-10 col-sm-9 col-md-10">
+                                {course.courseAnnouncement.length === 0 ?
+                                    <Typography variant="subtitle1" component="p">
+                                        No Announcements Yet..
+                                    </Typography>
+                                    :
+                                    (course.courseAnnouncement).map((text, index2) => {
+                                        return <Announcement key={index2} text={text} />
+                                    })
+                                }
+                            </TabPanel>
                         })}
 
-                        {role === "staff" && <Divider className={classes.myDivider} component="p" variant="middle" />}
-                        {role === "staff" && <Tab label="Add New Announcement" {...a11yProps(allAnnouncements.length + 1)} />}
 
-                    </Tabs>
-
-
-                    {allAnnouncements.map((course, index) => {
-                        return <TabPanel value={value} index={index}>
-                            {course.courseAnnouncement.length === 0 ?
-                                <Typography variant="subtitle1" component="p">
-                                    No Announcements Yet..
-                                </Typography>
-                                :
-                                (course.courseAnnouncement).map((text, index2) => {
-                                    return <Announcement key={index2} text={text} />
-                                })
-                            }
+                        <TabPanel value={value} index={allAnnouncements.length + 1} className="col-sm-9 col-md-7">
+                            <PostAnnouncement />
                         </TabPanel>
-                    })}
-
-
-                    <TabPanel value={value} index={allAnnouncements.length + 1}>
-                        <PostAnnouncement />
-                    </TabPanel>
-                </div>}
+                    </div>}
+            </div>
         </div >
     )
 }

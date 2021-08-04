@@ -101,8 +101,8 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
             <AppBar position="static">
                 <Search />
                 <Tabs centered value={value} onChange={handleChange} aria-label="simple tabs example">
-                    <Tab label="Dashboard" onClick={handleClickDashboard}  {...a11yProps(0)} />
-                    <Tab label="Discussion" onClick={handleClickDiscussion} default {...a11yProps(1)} />
+                    <Tab label="Dashboard" onClick={handleClickDashboard} default {...a11yProps(0)} />
+                    <Tab label="Discussion" onClick={handleClickDiscussion} {...a11yProps(1)} />
                     <Tab label="Announcements" onClick={handleClickCourseAnnouncement} {...a11yProps(2)} />
                     <Tab label="Notifications" onClick={handleClickNotifications} {...a11yProps(3)} />
                 </Tabs>

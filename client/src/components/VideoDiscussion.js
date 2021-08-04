@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
         // height: 224,
         direction: "row-reverse",
         justify: "flex-start",
-        // paddingLeft: 0,
+        paddingLeft: 0,
 
 
     },
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 const VideoDiscussion = () => {
     const classes = useStyles();
     const [value, setValue] = useState(0);
-    
+
 
     const token = localStorage.getItem('token')
     const userID = localStorage.getItem('userID')
@@ -110,14 +110,15 @@ const VideoDiscussion = () => {
 
 
     return (
-        <div>
+        <div className="container-fluid">
+            <div className="row">
                 <div className={classes.root}>
                     <Tabs
                         orientation="vertical"
                         value={value}
                         onChange={handleChange}
                         aria-label="Vertical tabs example"
-                        className={classes.tabs}
+                        className={`${classes.tabs} col-3 col-sm-3 col-md-2`}
 
                     >
 
@@ -127,15 +128,16 @@ const VideoDiscussion = () => {
 
 
 
-                    <TabPanel value={value} index={0}>
-                       <VideoPlayer/>
+                    <TabPanel value={value} index={0} className="col-10 col-sm-9 col-md-10">
+                        <VideoPlayer />
                     </TabPanel>
 
-                    <TabPanel value={value} index={1}>
+                    <TabPanel value={value} index={1} className="col-sm-9 col-md-7">
                         <PostContentDiscussion />
                     </TabPanel>
 
                 </div>
+            </div>
         </div >
     )
 }

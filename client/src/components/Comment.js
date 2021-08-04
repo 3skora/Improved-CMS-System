@@ -47,9 +47,9 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
     root: {
         // display: "inline-block",
-        width: 1050,
+        // maxWidth: "98%",
         margin: 15,
-        marginLeft: 40,
+        marginLeft: "3%",
         border: "1px solid #ccc",
         borderRadius: 15
 
@@ -62,9 +62,9 @@ const useStyles = makeStyles((theme) => ({
     },
     textFieldComment: {
         // display: "inline-block",
-        width: 924,
+        width: "96%",
         margin: 15,
-        marginLeft: 60,
+        marginLeft: "3%",
         marginBottom: 20,
         borderRadius: 20,
 
@@ -291,7 +291,7 @@ const Comment = ({ commentID, postID, onDelete, commentIsDeleted }) => {
                         </Button>
                     </CardActions>
                     {toggleReplies &&
-                        <Container>
+                        <div className="container-fluid">
                             {commentReplies.map(replyID => {
                                 return <Reply key={replyID} replyID={replyID} commentID={commentID} postID={postID} />
                             })}
@@ -314,7 +314,7 @@ const Comment = ({ commentID, postID, onDelete, commentIsDeleted }) => {
                                     />
                                 </form>
                             </ThemeProvider>
-                        </Container>
+                        </div>
                     }
                 </Card >
             }

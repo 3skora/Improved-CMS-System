@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
         // display: "inline-block",
         // maxWidth: 1000,
         margin: "15px",
-        marginLeft: 60,
+        marginLeft: "3%",
         // borderLeft: "6px solid #ccc",
         border: "1px solid #ccc",
         borderRadius: 20
@@ -232,7 +232,7 @@ const Reply = ({ replyID, commentID, postID }) => {
                         </Typography>
                     </CardContent>
 
-                    <CardActions style={{ marginLeft: 20 }}>
+                    <CardActions style={{ marginLeft: 15 }}>
                         {likeShape(toggleLike)}
                     </CardActions>
                 </Card>

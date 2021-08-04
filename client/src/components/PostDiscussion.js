@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
     formControl: {
         marginTop: theme.spacing(2),
-        minWidth: 120,
+        // minWidth: 120,
     },
     formControlLabel: {
         marginTop: theme.spacing(1),
@@ -114,7 +114,7 @@ const PostDiscussion = () => {
         }
     };
     return (
-        <div className="container" style={{ margin: "auto 200px", alignItems: 'center' }}>
+        <div className="container-fluid" style={{ margin: "auto 20%", alignItems: 'center' , justifyContent:"center" }}>
             <form onSubmit={handleSubmit}>
                 <TextField
                     align="center"

@@ -66,19 +66,33 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
     root: {
         // display: "inline-block",
-        width: 1200,
-        margin: "0px 15px 30px",
+        // width: 1200,
+        margin: "0px 1.5% 1.8%",
         // borderLeft: "8px solid #ccc",
         borderRadius: 5,
         cursor: "pointer",
         position: "relative",
+        padding: 0
 
     },
     avatarStudent: {
         backgroundColor: yellow[600], //learn ho to change color
+        // width: "70%",
+        // height: "70%",
+        display: "flex",
+        alignItems: "center",
+        marginRight: "7px",
+        // position: "absolute",
+        // top: "50%",
+        // bottom: "50%",
     },
-    avatarInstructor: {
+    avatarStaff: {
         backgroundColor: red[600], //learn ho to change color
+        // width: "80%",
+        // height: "80%",
+        // position: "absolute",
+        // top: "50%",
+        // bottom: "50%",
     },
     threeDots: {
         display: "flex",
@@ -94,25 +108,6 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(7),
     },
 }));
-
-function studentORInstructor(role, text) {
-    if (role === "student")
-        return (
-            <Tooltip title="Student" arrow>
-                <Avatar aria-label="recipe" style={{ backgroundColor: yellow[600], width: 48, height: 48 }}>
-                    {text.charAt(0).toUpperCase()}
-                </Avatar>
-            </Tooltip>
-        )
-    if (role === "staff")
-        return (
-            <Tooltip title="Instructor" arrow>
-                <Avatar aria-label="recipe" style={{ backgroundColor: red[600], width: 48, height: 48 }}>
-                    {text.charAt(0).toUpperCase()}
-                </Avatar>
-            </Tooltip>
-        )
-}
 
 
 const theme = createMuiTheme({
@@ -206,8 +201,27 @@ const Notification = ({ notificationID }) => {
         )
     }
 
+    function studentORInstructor(role, text) {
+        if (role === "student")
+            return (
+                <Tooltip title="Student" arrow>
+                    <Avatar aria-label="recipe" className={classes.avatarStudent}>
+                        {text.charAt(0).toUpperCase()}
+                    </Avatar>
+                </Tooltip>
+            )
+        if (role === "staff")
+            return (
+                <Tooltip title="Instructor" arrow>
+                    <Avatar aria-label="recipe" className={classes.avatarStaff}>
+                        {text.charAt(0).toUpperCase()}
+                    </Avatar>
+                </Tooltip>
+            )
+    }
+
     return (
-        <div>
+        <div className="row">
 
             {
                 notificationData &&
@@ -225,10 +239,10 @@ const Notification = ({ notificationID }) => {
 
                     <CardContent>
                         <Grid container rowSpacing={0} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                            <Grid item xs={1} style={{ flexBasis: "5.333333%" }}>
+                            <Grid item xs={3} style={{ flexBasis: "4.333333%" }}>
                                 {studentORInstructor(notificationData.role, notificationData.text)}
                             </Grid>
-                            <Grid item xs={11}>
+                            <Grid item xs={9}>
                                 <Typography variant="h6" component="p">
                                     {notificationData.text}
                                 </Typography>

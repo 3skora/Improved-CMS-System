@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         // height: 224,
         direction: "row-reverse",
         justify: "flex-start",
-        // paddingLeft: 0,
+        paddingLeft: 0,
 
 
     },
@@ -111,47 +111,45 @@ const NotificationPage = () => {
 
 
     return (
-        <div>
+        <div className="container-fluid">
+            <div className="row">
+                {all && courseNotifications && discussionNotifications &&
+                    <div className={classes.root}>
+                        <Tabs
+                            orientation="vertical"
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="Vertical tabs example"
+                            className={`${classes.tabs} col-4 col-sm-3 col-md-2`}
 
-            {all && courseNotifications && discussionNotifications &&
-                <div className={classes.root}>
-                    <Tabs
-                        orientation="vertical"
-                        value={value}
-                        onChange={handleChange}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
+                        >
 
-                    >
-
-                        <Tab label="All Notifications" {...a11yProps(0)} />
-                        <Tab label="Course Notifications" {...a11yProps(1)} />
-                        <Tab label="Discussion Notifications" {...a11yProps(2)} />
-                    </Tabs>
-
-
-
-                    <TabPanel value={value} index={0}>
-                        {all.map(notificationID => {
-                            return <Notification key={notificationID} notificationID={notificationID} />
-                        })}
-                    </TabPanel>
-
-                    <TabPanel value={value} index={1}>
-                        {courseNotifications.map(notificationID => {
-                            return <Notification key={notificationID} notificationID={notificationID} />
-                        })}
-                    </TabPanel>
-
-                    <TabPanel value={value} index={2}>
-                        {discussionNotifications.map(notificationID => {
-                            return <Notification key={notificationID} notificationID={notificationID} />
-                        })}
-                    </TabPanel>
+                            <Tab label="All Notifications" {...a11yProps(0)} />
+                            <Tab label="Course Notifications" {...a11yProps(1)} />
+                            <Tab label="Discussion Notifications" {...a11yProps(2)} />
+                        </Tabs>
 
 
-                </div>
-            }
+
+                        <TabPanel value={value} index={0} className="col-9 col-sm-9 col-md-10">
+                            {all.map(notificationID => {
+                                return <Notification key={notificationID} notificationID={notificationID} />
+                            })}
+                        </TabPanel>
+
+                        <TabPanel value={value} index={1} className="col-9 col-sm-9 col-md-10">
+                            {courseNotifications.map(notificationID => {
+                                return <Notification key={notificationID} notificationID={notificationID} />
+                            })}
+                        </TabPanel>
+
+                        <TabPanel value={value} index={2} className="col-9 col-sm-9 col-md-10">
+                            {discussionNotifications.map(notificationID => {
+                                return <Notification key={notificationID} notificationID={notificationID} />
+                            })}
+                        </TabPanel>
+                    </div>}
+            </div>
         </div >
     )
 }

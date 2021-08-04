@@ -48,16 +48,17 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
     root: {
         // display: "inline-block",
-        width: 1200,
-        margin: "0px 15px 30px",
+        maxWidth: "98.5%",
+        margin: "0px 1.5% 1.8%",
         borderLeft: "8px solid #ccc",
-        borderRadius: 5
+        borderRadius: 5,
+        padding: 0
     },
     textFieldComment: {
         // display: "inline-block",
-        width: 1055,
+        width: "96%",
         margin: 15,
-        marginLeft: 40,
+        marginLeft: "3%",
         marginBottom: 30,
         borderRadius: 15,
 
@@ -275,65 +276,67 @@ export default function Discussion({ discussionID }) {
     return (
         <>
             {discussionData &&
-                <Card className={classes.root}>
-                    <CardHeader
+                <div className="row">
+                    <Card className={`${classes.root}`}>
+                        <CardHeader
 
-                        avatar={studentORInstructor(discussionData.author.role, discussionData.author.firstName.charAt(0))}
-                        action={toggleSettings(role, discussionData.author._id)}
-                        title={`${discussionData.author.firstName} ${discussionData.author.lastName}`}
-                        subheader={`${discussionData.date} ${discussionData.edited ? "(edited)" : ""}`}
-                    />
+                            avatar={studentORInstructor(discussionData.author.role, discussionData.author.firstName.charAt(0))}
+                            action={toggleSettings(role, discussionData.author._id)}
+                            title={`${discussionData.author.firstName} ${discussionData.author.lastName}`}
+                            subheader={`${discussionData.date} ${discussionData.edited ? "(edited)" : ""}`}
+                        />
 
-                    <CardContent>
-                        <Typography variant="subtitle1" component="p">
-                            {discussionData.text}
-                        </Typography>
-                    </CardContent>
+                        <CardContent>
+                            <Typography variant="subtitle1" component="p">
+                                {discussionData.text}
+                            </Typography>
+                        </CardContent>
 
-                    <CardActions style={{ marginLeft: 10 }}>
-                        {likeShape(toggleLike)}
-                        <Button
-                            onClick={() => setToggleComments(!toggleComments)}
-                            startIcon={<InsertCommentOutlinedIcon />}
-                            size="medium" color="">
-                            Comment ({discussionComments.length})
-                        </Button>
-                    </CardActions >
-                    {toggleComments &&
-                        <Container>
-                            {discussionComments.map(commentID => {
-                                return <Comment key={commentID}
-                                    commentID={commentID}
-                                    postID={discussionID}
-                                    commentIsDeleted={commentIsDeleted}
-                                    onDelete={deleteCommentFn} />
-                            })}
+                        <CardActions style={{ marginLeft: 10 }}>
+                            {likeShape(toggleLike)}
+                            <Button
+                                onClick={() => setToggleComments(!toggleComments)}
+                                startIcon={<InsertCommentOutlinedIcon />}
+                                size="medium" color="">
+                                Comment ({discussionComments.length})
+                            </Button>
+                        </CardActions >
+                        {toggleComments &&
+                            <div className="container-fluid">
+                                {discussionComments.map(commentID => {
+                                    return <Comment key={commentID}
+                                        commentID={commentID}
+                                        postID={discussionID}
+                                        commentIsDeleted={commentIsDeleted}
+                                        onDelete={deleteCommentFn} />
+                                })}
 
-                            {
+                                {
 
-                            }
+                                }
 
-                            <ThemeProvider theme={theme}>
-                                <form onSubmit={handleSubmit}>
+                                <ThemeProvider theme={theme}>
+                                    <form onSubmit={handleSubmit}>
 
-                                    <TextField
-                                        id="outlined-textarea"
-                                        // label="Comment"
-                                        placeholder="Write a comment"
-                                        // multiline
-                                        fullWidth
-                                        variant="outlined"
-                                        value={text}
-                                        className={classes.textFieldComment}
-                                        onChange={(e) => {
-                                            setText(e.target.value)
-                                        }}
-                                    />
-                                </form>
-                            </ThemeProvider>
-                        </Container>
-                    }
-                </Card>
+                                        <TextField
+                                            id="outlined-textarea"
+                                            // label="Comment"
+                                            placeholder="Write a comment"
+                                            // multiline
+                                            fullWidth
+                                            variant="outlined"
+                                            value={text}
+                                            className={classes.textFieldComment}
+                                            onChange={(e) => {
+                                                setText(e.target.value)
+                                            }}
+                                        />
+                                    </form>
+                                </ThemeProvider>
+                            </div>
+                        }
+                    </Card>
+                </div>
             }
 
             {

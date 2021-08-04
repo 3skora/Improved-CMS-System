@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
         // height: 224,
         direction: "row-reverse",
         justify: "flex-start",
-        // paddingLeft: 0,
+        paddingLeft: 0,
 
 
     },
@@ -107,47 +107,49 @@ const AllDiscussions = () => {
 
 
     return (
-        <div>
-            {allCourses &&
-                <div className={classes.root}>
-                    <Tabs
-                        orientation="vertical"
-                        value={value}
-                        onChange={handleChange}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
+        <div className="container-fluid">
+            <div className="row">
+                {allCourses &&
+                    <div className={`${classes.root}`}>
+                        <Tabs
+                            orientation="vertical"
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="Vertical tabs example"
+                            className={`${classes.tabs} col-3 col-sm-3 col-md-2`}
 
-                    >
-                        {allCourses.map((course, index) => {
-                            return <Tab key={index} label={`${course.name} (${course.code})`} {...a11yProps(index)} />
-                        })}
-
-                        <Divider className={classes.myDivider} component="p" variant="middle" />
-                        <Tab label="View Your Activity" {...a11yProps(allCourses.length + 1)} />
-                        <Tab label="Add New Post" {...a11yProps(allCourses.length + 2)} />
-                    </Tabs>
-
-
-                    {allCourses.map((course, index) => {
-                        return <TabPanel value={value} index={index}>
-                            {(course.discussion.reverse()).map((discussionID, index2) => {
-                                return <Discussion key={index2} discussionID={discussionID} />
+                        >
+                            {allCourses.map((course, index) => {
+                                return <Tab key={index} label={`${course.name} (${course.code})`} {...a11yProps(index)} />
                             })}
-                        </TabPanel>
-                    })}
 
-                    <TabPanel value={value} index={allCourses.length + 1}>
+                            <Divider className={classes.myDivider} component="p" variant="middle" />
+                            <Tab label="View Your Activity" {...a11yProps(allCourses.length + 1)} />
+                            <Tab label="Add New Post" {...a11yProps(allCourses.length + 2)} />
+                        </Tabs>
 
-                        {activities.map(discussionID => {
-                            return <Discussion key={discussionID} discussionID={discussionID} />
+
+                        {allCourses.map((course, index) => {
+                            return <TabPanel value={value} index={index} className="col-10 col-sm-9 col-md-10">
+                                {(course.discussion).map((discussionID, index2) => {
+                                    return <Discussion key={index2} discussionID={discussionID} />
+                                })}
+                            </TabPanel>
                         })}
 
-                    </TabPanel>
-                    <TabPanel value={value} index={allCourses.length + 2}>
-                        <PostDiscussion />
-                    </TabPanel>
+                        <TabPanel value={value} index={allCourses.length + 1} className="col-10 col-sm-9 col-md-10">
 
-                </div>}
+                            {activities.map(discussionID => {
+                                return <Discussion key={discussionID} discussionID={discussionID} />
+                            })}
+
+                        </TabPanel>
+                        <TabPanel value={value} index={allCourses.length + 2} className="col-sm-9 col-md-7">
+                            <PostDiscussion />
+                        </TabPanel>
+
+                    </div>}
+            </div>
         </div >
     )
 }

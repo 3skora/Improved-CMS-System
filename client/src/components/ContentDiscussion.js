@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         // height: 224,
         direction: "row-reverse",
         justify: "flex-start",
-        // paddingLeft: 0,
+        paddingLeft: 0,
 
 
     },
@@ -119,37 +119,37 @@ const ContentDiscussion = () => {
 
 
     return (
-        <div>
+        <div className="container-fluid">
+            <div className="row">
+                {contentDiscussionArr &&
+                    <div className={classes.root}>
+                        <Tabs
+                            orientation="vertical"
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="Vertical tabs example"
+                            className={`${classes.tabs} col-3 col-sm-3 col-md-2`}
 
-            {contentDiscussionArr &&
-                <div className={classes.root}>
-                    <Tabs
-                        orientation="vertical"
-                        value={value}
-                        onChange={handleChange}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
+                        >
 
-                    >
-
-                        <Tab label="Content Discussion" {...a11yProps(0)} />
-                        <Tab label="Add New Post" {...a11yProps(1)} />
-                    </Tabs>
+                            <Tab label="Content Discussion" {...a11yProps(0)} />
+                            <Tab label="Add New Post" {...a11yProps(1)} />
+                        </Tabs>
 
 
 
-                    <TabPanel value={value} index={0}>
-                        {(contentDiscussionArr.reverse()).map(discussionID => {
-                            return <Discussion key={discussionID} discussionID={discussionID} />
-                        })}
-                    </TabPanel>
+                        <TabPanel value={value} index={0} className="col-10 col-sm-9 col-md-10">
+                            {(contentDiscussionArr.reverse()).map(discussionID => {
+                                return <Discussion key={discussionID} discussionID={discussionID} />
+                            })}
+                        </TabPanel>
 
-                    <TabPanel value={value} index={1}>
-                        <PostContentDiscussion />
-                    </TabPanel>
+                        <TabPanel value={value} index={1} className="col-sm-9 col-md-7">
+                            <PostContentDiscussion />
+                        </TabPanel>
 
-                </div>
-            }
+                    </div>}
+            </div>
         </div >
     )
 }
