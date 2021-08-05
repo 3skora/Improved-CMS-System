@@ -182,6 +182,7 @@ const Dashboard = () => {
                     setSubFolders(res.data.subFolders)
                     setLoadingSubFolders(false)
                     setThreeDots(true)
+                    // setIsThreeDotsClicked(false)
                     setNavsPro(res.data.folderName)
                     setFoldersChanged(false)
                     setContents(res.data.contents.reverse())
@@ -191,8 +192,9 @@ const Dashboard = () => {
 
     }, [rootFolder, foldersChanged])
 
-    const handleDoubleClickFn = (rootFolderParam) => {
-        history.push(`${rootFolderParam}`)
+    const handleDoubleClickFn = (rootFolderParam , isThreeDotsClicked) => {
+        if (!isThreeDotsClicked)
+            history.push(`${rootFolderParam}`)
     }
 
     const setNavsPro = async (folderName) => {
@@ -269,108 +271,108 @@ const Dashboard = () => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className={classes.root}>
-                                <Grid container
-                                    direction="row"
-                                    justify="flex-start"
-                                    alignItems="center"
-                                    spacing={0}>
+                                <div className="container-fluid">
+                                    <div className="row gx-4">
+                                        {
+                                            subFolders.map(item => {
+                                                return (
+                                                    <Folder
+                                                        add={handleClick}
+                                                        folderClicked={handleDoubleClickFn}
+                                                        isOneClick={false}
+                                                        // threeDotsClicked={isThreeDotsClicked}
+                                                        // setThreeDotsClicked={setThreeDotsClicked}
+                                                        rootFolder={item._id}
+                                                        folderName={item.folderName}
+                                                        role={role}
+                                                        threeDots={threeDots}
+                                                        folderChanged={setFoldersChangedFN}
+                                                        key={item._id}
+                                                    />
+                                                )
+                                            })
+                                        }
 
-                                    {
-                                        subFolders.map(item => {
-                                            return <Grid item xs={6} sm={3} key={item._id}>
+                                        {
+                                            !loadingSubFolders && role === "staff" &&
+                                            <>
                                                 <Folder
                                                     add={handleClick}
-                                                    folderClicked={handleDoubleClickFn}
-                                                    isOneClick={false}
-                                                    rootFolder={item._id}
-                                                    folderName={item.folderName}
+                                                    // folderClicked={handleAddSubFolderOrContentFn}
+                                                    isOneClick={true}
+                                                    // threeDotsClicked={isThreeDotsClicked}
+                                                    rootFolder={rootFolder}
+                                                    folderName="Add Folder/Content"
                                                     role={role}
-                                                    threeDots={threeDots}
-                                                    folderChanged={setFoldersChangedFN}
-                                                // index={index}
                                                 />
-                                            </Grid>
-                                        })
-                                    }
 
-                                    {
-                                        !loadingSubFolders && role === "staff" &&
-                                        <div>
-                                            <Folder
-                                                add={handleClick}
-                                                // folderClicked={handleAddSubFolderOrContentFn}
-                                                isOneClick={true}
-                                                rootFolder={rootFolder}
-                                                folderName="Add Folder/Content"
-                                                role={role}
-                                            />
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleClose}
+                                                >
+                                                    <MenuItem onClick={() => setOpenAdd(true)}>Add Folder</MenuItem>
+                                                    <MenuItem onClick={() => setOpenUpload(true)}>Upload Content</MenuItem>
+                                                </Menu>
 
-                                            <Menu
-                                                id="simple-menu"
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleClose}
-                                            >
-                                                <MenuItem onClick={() => setOpenAdd(true)}>Add Folder</MenuItem>
-                                                <MenuItem onClick={() => setOpenUpload(true)}>Upload Content</MenuItem>
-                                            </Menu>
-
-                                            {/* Dialog to add new folder */}
-                                            {
-                                                openAdd &&
-                                                <>
-                                                    <Dialog open={openAdd} onClose={() => setOpenAdd(false)} aria-labelledby="form-dialog-title">
-                                                        <DialogTitle id="form-dialog-title">Add New Folder</DialogTitle>
-                                                        <DialogContent>
-                                                            <DialogContentText>
-                                                                To add a new folder, please enter folder name here.
-                                                            </DialogContentText>
-                                                            <TextField
-                                                                autoFocus
-                                                                // defaultValue={discussionData.text}
-                                                                value={addNewFolderName}
-                                                                onChange={(e) => setAddNewFolderName(e.target.value)}
-                                                                margin="dense"
-                                                                id="name"
-                                                                label="New Text"
-                                                                type="text"
-                                                                fullWidth
-                                                            />
-                                                        </DialogContent>
-                                                        <DialogActions>
-                                                            <Button onClick={() => { setOpenAdd(false); setAddNewFolderName("") }} color="primary">
-                                                                Cancel
-                                                            </Button>
-                                                            <Button onClick={addFolder} color="primary">
-                                                                Add
-                                                            </Button>
-                                                        </DialogActions>
-                                                    </Dialog>
-                                                </>
-                                            }
+                                                {/* Dialog to add new folder */}
+                                                {
+                                                    openAdd &&
+                                                    <>
+                                                        <Dialog open={openAdd} onClose={() => setOpenAdd(false)} aria-labelledby="form-dialog-title">
+                                                            <DialogTitle id="form-dialog-title">Add New Folder</DialogTitle>
+                                                            <DialogContent>
+                                                                <DialogContentText>
+                                                                    To add a new folder, please enter folder name here.
+                                                                </DialogContentText>
+                                                                <TextField
+                                                                    autoFocus
+                                                                    // defaultValue={discussionData.text}
+                                                                    value={addNewFolderName}
+                                                                    onChange={(e) => setAddNewFolderName(e.target.value)}
+                                                                    margin="dense"
+                                                                    id="name"
+                                                                    label="New Text"
+                                                                    type="text"
+                                                                    fullWidth
+                                                                />
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                <Button onClick={() => { setOpenAdd(false); setAddNewFolderName("") }} color="primary">
+                                                                    Cancel
+                                                                </Button>
+                                                                <Button onClick={addFolder} color="primary">
+                                                                    Add
+                                                                </Button>
+                                                            </DialogActions>
+                                                        </Dialog>
+                                                    </>
+                                                }
 
 
 
-                                            {
-                                                openMessage &&
-                                                <Snackbar open={openMessage} autoHideDuration={2500} onClose={handleCloseMessage}>
-                                                    <Alert onClose={handleCloseMessage} severity="success">
-                                                        {MessageText}
-                                                    </Alert>
-                                                </Snackbar>
+                                                {
+                                                    openMessage &&
+                                                    <Snackbar open={openMessage} autoHideDuration={2500} onClose={handleCloseMessage}>
+                                                        <Alert onClose={handleCloseMessage} severity="success">
+                                                            {MessageText}
+                                                        </Alert>
+                                                    </Snackbar>
 
-                                            }
+                                                }
 
-                                            {
-                                                openUpload ? <UploadContent isOpen={true} isClosed={closeDialogContent} folderChanged={setFoldersChangedFN} courseID={courseID} />
-                                                    :
-                                                    <UploadContent isOpen={false} isClosed={closeDialogContent} folderChanged={setFoldersChangedFN} courseID={courseID} />
-                                            }
-                                        </div>
-                                    }
+                                                {
+                                                    openUpload ? <UploadContent isOpen={true} isClosed={closeDialogContent} folderChanged={setFoldersChangedFN} courseID={courseID} />
+                                                        :
+                                                        <UploadContent isOpen={false} isClosed={closeDialogContent} folderChanged={setFoldersChangedFN} courseID={courseID} />
+                                                }
+                                            </>
+                                        }
 
-                                </Grid>
+                                    </div>
+                                </div>
                             </div>
                         </AccordionDetails>
                     </Accordion>

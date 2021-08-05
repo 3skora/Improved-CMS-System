@@ -24,7 +24,7 @@ import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { ButtonBase, Container, Card, CardActions, CardContent, Button, Paper, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core/';
+import { Grid, ButtonBase, Container, Card, CardActions, CardContent, Button, Paper, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core/';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -34,90 +34,72 @@ const useStyles = makeStyles((theme) => ({
     // rootPaper: {
     //     display: "flex",
     //     flexWrap: "wrap",
-
-    //     width: "250px",
-    //     height: "20%",
+    //     // fontSize : "15px",
+    //     // width: "18em",
+    //     width: "280px",
+    //     height: "90px",
+    //     // height: "20%",
     //     cursor: "pointer",
-    //     margin: "20px 0",
+    //     margin: "0px 0px 30px 30px",
     //     padding: "10px 0",
     //     position: "relative",
 
     // },
     // rootFolderIcon: {
-    //     // display: "flex",
+    //     display: "inline",
     //     // alignItems: "center",
     //     width: "2.3em",
     //     height: "3em",
     //     padding: "3px",
     //     margin: "auto 5px",
     //     // float: "left",
+
+    //     position: "absolute",
+    //     top: "50%",
+    //     bottom: "50%",
     // },
     // rootFolderName: {
     //     // display: "inline",
     //     display: "flex",
     //     alignItems: "center",
-
     //     fontSize: "1em",
     //     // fontSize: "1.2vw",
     //     // fontWeight: "600",
-    //     margin: "auto 5px",
-    //     width: "150px",
-    //     height: "50px",
+    //     margin: "auto 0px",
+    //     // width: "150px",
+    //     // height: "50px",
     //     // textAlign: "left",
 
     //     position: "absolute",
-    //     top: "20%",
+    //     top: "50%",
+    //     bottom: "50%",
     //     left: "25%",
 
     //     // float: "left",
     // },
 
-    rootPaper: {
-        display: "flex",
-        flexWrap: "wrap",
-        // fontSize : "15px",
-        // width: "18em",
-        width: "280px",
-        height: "90px",
-        // height: "20%",
-        cursor: "pointer",
-        margin: "0px 0px 30px 30px",
-        padding: "10px 0",
-        position: "relative",
 
+    rootPaper: {
+        height: "90px",
+        cursor: "pointer",
     },
     rootFolderIcon: {
-        display: "inline",
-        // alignItems: "center",
-        width: "2.3em",
+        width: "2.2em",
         height: "3em",
-        padding: "3px",
+        // padding: "1px",
         margin: "auto 5px",
-        // float: "left",
-
         position: "absolute",
         top: "50%",
         bottom: "50%",
     },
     rootFolderName: {
-        // display: "inline",
         display: "flex",
         alignItems: "center",
-        fontSize: "1em",
-        // fontSize: "1.2vw",
-        // fontWeight: "600",
-        margin: "auto 0px",
-        // width: "150px",
-        // height: "50px",
-        // textAlign: "left",
-
         position: "absolute",
         top: "50%",
         bottom: "50%",
-        left: "25%",
-
-        // float: "left",
     },
+
     threeDots: {
         display: "flex",
         alignItems: "center",
@@ -143,6 +125,7 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
     const [openMessage, setOpenMessage] = useState(false);
     const [MessageText, setMessageText] = useState();
 
+    let isThreeDotsClicked = false;
     const handleCloseMessage = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -153,7 +136,7 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
     };
 
     const editFolder = async () => {
-        console.log(addNewFolderName)
+
         try {
             const res = await axios.patch(`http://localhost:8080/courses/editFolder/${rootFolder}`, { newFolderName: addNewFolderName })
             setOpenEdit(false)
@@ -172,52 +155,70 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
 
     }
 
+    const handleClick = (e) => {
+        // if (!isThreeDotsClicked) {
+        if (folderName !== "Add Folder/Content") {
+            folderClicked(rootFolder, isThreeDotsClicked)
+        }
+        else {
+            add(e, isOneClick)
+        }
+        // }
+    }
 
     return (
         <>
-            <Paper
-                onClick={(e) => add(e, isOneClick)}
-                onDoubleClick={() => folderClicked(rootFolder)}
-                className={classes.rootPaper}>
-                {
-                    folderName !== "Add Folder/Content" ?
-                        <FolderRoundedIcon className={classes.rootFolderIcon} />
-                        :
-                        <LibraryAddRoundedIcon className={classes.rootFolderIcon} />
-                }
-                <Typography variant="h6" className={classes.rootFolderName}>
-                    {folderName}
-                </Typography>
+            <div className={`col-xs-12 col-sm-6 col-lg-4 col-xl-3`}>
+                <Paper
+                    onClick={handleClick}
+                    className={`card mb-3 mx-3 ps-2 py-3 ${classes.rootPaper}`}
+                >
+                    <Grid container wrap="nowrap" spacing={9}>
+                        <Grid item xs={2}>
+                            {
+                                folderName !== "Add Folder/Content" ?
+                                    <FolderRoundedIcon className={classes.rootFolderIcon} />
+                                    :
+                                    <LibraryAddRoundedIcon className={classes.rootFolderIcon} />
+                            }
+                        </Grid>
 
+                        <Grid item xs={9}>
+                            <Typography variant="h6" component="span" className={`fs-6 ${classes.rootFolderName}`}>
+                                {folderName}
+                            </Typography>
+                        </Grid>
 
-                {role === "staff" && folderName !== "Add Folder/Content" && threeDots &&
-                    <div className={classes.threeDots}>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorEl}
-                            // keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={() => setAnchorEl(null)}
+                        <Grid item xs={1} onClick={() => isThreeDotsClicked = true}>
+                            {role === "staff" && folderName !== "Add Folder/Content" && threeDots &&
+                                <div className={classes.threeDots}>
+                                    <Menu
+                                        id="simple-menu"
+                                        anchorEl={anchorEl}
+                                        // keepMounted
+                                        open={Boolean(anchorEl)}
+                                        onClose={() => setAnchorEl(null)}
 
-                        >
-                            <MenuItem onClick={() => setOpenEdit(true)}>
-                                <EditIcon style={{ marginRight: 7 }} />
-                                Edit
-                            </MenuItem>
+                                    >
+                                        <MenuItem onClick={() => { setAnchorEl(null); setOpenEdit(true) }}>
+                                            <EditIcon style={{ marginRight: 7 }} />
+                                            Edit
+                                        </MenuItem>
 
-                            <MenuItem onClick={() => setOpenDelete(true)}>
-                                <DeleteIcon style={{ marginRight: 7 }} />
-                                Delete
-                            </MenuItem>
-                        </Menu>
-                        <IconButton aria-label="settings" onClick={(e) => setAnchorEl(e.currentTarget)}>
-                            <MoreVertIcon />
-                        </IconButton>
-                    </div >
-                }
-
-            </Paper>
-
+                                        <MenuItem onClick={() => setOpenDelete(true)}>
+                                            <DeleteIcon style={{ marginRight: 7 }} />
+                                            Delete
+                                        </MenuItem>
+                                    </Menu>
+                                    <IconButton aria-label="settings" onClick={(e) => setAnchorEl(e.currentTarget)}>
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                </div>
+                            }
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </div>
             {/* Dialog to edit folder */}
             {
                 openEdit &&
