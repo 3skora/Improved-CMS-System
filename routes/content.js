@@ -86,19 +86,21 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
         await Folder.findByIdAndUpdate(folderID, { $addToSet: { contents: [savedContent._id] } },
             { new: true, runValidators: true, useFindAndModify: true })
 
+        const { courseID } = req.body
+        const courseData = await Course.findById(courseID)
 
         //add notification
         const userData = await User.findById(req.user.id)
         const authorFullName = `${userData.firstName} ${userData.lastName}`
-        const text = `${authorFullName} uploaded a new content`
+        const courseNameCode = `${courseData.name} (${courseData.code})`
+        const notificationDetails = `to ${courseNameCode} course`
+        const text = `${authorFullName} uploaded a new content ${notificationDetails}`
         const type = "content"
         const refID = folderID
         const newNotification = new Notification({ role: userData.role, text, type, refID })
         const savedNotification = await newNotification.save()
 
         //send the notification 
-        const { courseID } = req.body
-        const courseData = await Course.findById(courseID)
         const studentsArr = courseData.students
         const staffArr = courseData.staff
 
