@@ -21,6 +21,7 @@ import { useHistory } from "react-router";
 import Discussion from "./Discussion";
 import { useLocation, useParams } from "react-router-dom";
 import CourseAnnouncement from "./CourseAnnouncement"
+import OneAnnouncement from "./OneAnnouncement"
 
 
 function TabPanel(props) {
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleTabs({ selectedTab, type, search, watch, notification }) {
+export default function SimpleTabs({ selectedTab, type, search, watch, notification , allAnnouncements}) {
     const classes = useStyles();
     const [value, setValue] = React.useState(selectedTab);
     let history = useHistory()
@@ -114,7 +115,7 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
                 {notification ? <Discussion discussionID={discussionID} /> : type === "general" ? <AllDiscussions /> : <ContentDiscussion />}
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <CourseAnnouncement />
+                {allAnnouncements ? <CourseAnnouncement /> : <OneAnnouncement /> }
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <NotificationPage />

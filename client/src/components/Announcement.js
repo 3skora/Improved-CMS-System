@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         // display: "inline-block",
         // width: 1200,
+        maxWidth: "98.5%",
         margin: "0px 1.5% 1.8%",
         // borderLeft: "8px solid crimson",
         borderRadius: 5,

@@ -80,7 +80,7 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
         //save content in DB
         const newContent = new Content({ author: req.user.id, folderID, ...req.body, file: req.file, })
         const savedContent = await newContent.save()
-        console.log("🚀 ~ file: content.js ~ line 82 ~ router.post ~ savedContent", savedContent)
+        // console.log("🚀 ~ file: content.js ~ line 82 ~ router.post ~ savedContent", savedContent)
 
         //add content to course array
         await Folder.findByIdAndUpdate(folderID, { $addToSet: { contents: [savedContent._id] } },
@@ -91,8 +91,8 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
         const userData = await User.findById(req.user.id)
         const authorFullName = `${userData.firstName} ${userData.lastName}`
         const text = `${authorFullName} uploaded a new content`
-        const type = "course"
-        const refID = savedContent._id
+        const type = "content"
+        const refID = folderID
         const newNotification = new Notification({ role: userData.role, text, type, refID })
         const savedNotification = await newNotification.save()
 

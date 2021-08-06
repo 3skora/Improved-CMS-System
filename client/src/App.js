@@ -163,7 +163,14 @@ function App() {
         <Route exact path="/announcements">
           {
             token ?
-              <HomeStudent token={token} userID={userID} selectedTab={2} />
+              <HomeStudent token={token} userID={userID} selectedTab={2} allAnnouncements={true} />
+              : <Redirect to="/login" />
+          }
+        </Route>
+        <Route exact path="/announcements/:courseID/:courseAnnouncementIndex">
+          {
+            token ?
+              <HomeStudent token={token} userID={userID} selectedTab={2} allAnnouncements={false} />
               : <Redirect to="/login" />
           }
         </Route>
@@ -245,7 +252,14 @@ function App() {
         <Route exact path="/announcements">
           {
             token ?
-              <HomeStaff token={token} userID={userID} selectedTab={2} />
+              <HomeStudent token={token} userID={userID} selectedTab={2} allAnnouncements={true} />
+              : <Redirect to="/login" />
+          }
+        </Route>
+        <Route exact path="/announcements/:courseID/:courseAnnouncementIndex">
+          {
+            token ?
+              <HomeStudent token={token} userID={userID} selectedTab={2} allAnnouncements={false} />
               : <Redirect to="/login" />
           }
         </Route>

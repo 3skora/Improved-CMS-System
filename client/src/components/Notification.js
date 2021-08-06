@@ -155,6 +155,17 @@ const Notification = ({ notificationID }) => {
             history.push(`discussion/${notificationData.refID}`)
             window.location.reload()
         }
+
+        if (notificationData.type === "content") {
+            history.push(`dashboard/${notificationData.refID}`)
+            window.location.reload()
+        }
+
+        if (notificationData.type.includes("#")) {
+            const arr = notificationData.type.split("#")
+            history.push(`announcements/${notificationData.refID}/${arr[1]}`)
+            window.location.reload()
+        }
         // <Redirect to={`discussion/${notificationData.refID}`} />
         // history.go()
     }

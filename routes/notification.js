@@ -29,11 +29,11 @@ router.get("/all/:userID", async (req, res) => {
 
         for (const notificationID of foundUser.notifications) {
             const foundNotification = await Notification.findById(notificationID)
-            if (foundNotification.type === "course")
-                courseNotifications.push(notificationID)
-
             if (foundNotification.type === "discussion")
                 discussionNotifications.push(notificationID)
+
+            else
+                courseNotifications.push(notificationID)
         }
 
         let result = { all: foundUser.notifications, courseNotifications, discussionNotifications }

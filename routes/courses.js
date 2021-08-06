@@ -346,6 +346,18 @@ router.get("/courseAnnouncements/:userID", async (req, res) => {
 
 });
 
+router.get("/courseAnnouncement/:courseID", async (req, res) => {
+    try {
+        const { courseID } = req.params
+        const courseDetails = (await Course.findById(courseID)).courseAnnouncement
+        res.json(courseDetails)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+
+
+});
+
 router.post("/courseAnnouncements", async (req, res) => {
     try {
         const { newAnnouncement, courseID, author } = req.body
@@ -370,7 +382,8 @@ router.post("/courseAnnouncements", async (req, res) => {
 
         //add notification
         const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
-        const NotificationType = "course"
+        const courseAnnouncementIndex = foundCourse.courseAnnouncement.length
+        const NotificationType = `announcement#${courseAnnouncementIndex}`
         const text = `${authorFullName} added a new announcement ${notificationDetails}`
         const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
         const savedNotification = await newNotification.save()
