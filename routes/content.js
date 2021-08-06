@@ -127,14 +127,14 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
     }
 });
 
-router.delete("/:contentID", authStaff, async (req, res) => {
+router.delete("/:folderID/:contentID", authStaff, async (req, res) => {
     try {
-        const { contentID } = req.params
+        const { contentID , folderID} = req.params
         const foundContent = await Content.findById(contentID)
         if (!foundContent)
             return res.status(400).json("Content not found");
 
-        deleteContent(contentID)
+        deleteContent(contentID , folderID)
         res.send("content deleted");
 
     } catch (err) {

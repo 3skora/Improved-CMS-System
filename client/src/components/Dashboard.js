@@ -151,11 +151,9 @@ const Dashboard = () => {
         headers: { token }
     }
 
-
+    console.log(foldersChanged)
 
     useEffect(() => {
-        // console.log("folderID from useEffect => ", rootFolder)
-        // console.log("foldersChanged from useEffect => ", foldersChanged)
         if (!rootFolder) {
 
             axios.get(`http://localhost:8080/courses/${userID}`, auth)
@@ -163,18 +161,8 @@ const Dashboard = () => {
                     setSubFolders(res.data)
                     setLoadingSubFolders(true)
                     setThreeDots(false)
-                    // setCourseIDSwitch(true)
-                    // setNavs([...navs, { rootFolder: "", folderName: "Dashboard" }])
-                    // setContents(res.data.contents.reverse())
                 })
                 .catch(err => console.log(err))
-
-
-            // axios.get(`http://localhost:8080/courses/all/${userID}`, auth)
-            //     .then(res => {
-            //         setAllCourseIDs(res.data)
-            //     })
-            //     .catch(err => console.log(err))
         }
         else {
             axios.get(`http://localhost:8080/courses/folder/${rootFolder}`, auth)
@@ -182,17 +170,16 @@ const Dashboard = () => {
                     setSubFolders(res.data.subFolders)
                     setLoadingSubFolders(false)
                     setThreeDots(true)
-                    // setIsThreeDotsClicked(false)
                     setNavsPro(res.data.folderName)
-                    setFoldersChanged(false)
                     setContents(res.data.contents.reverse())
+                    setFoldersChanged(false)
                 })
                 .catch(err => console.log(err))
         }
 
     }, [rootFolder, foldersChanged])
 
-    const handleDoubleClickFn = (rootFolderParam , isThreeDotsClicked) => {
+    const handleDoubleClickFn = (rootFolderParam, isThreeDotsClicked) => {
         if (!isThreeDotsClicked)
             history.push(`${rootFolderParam}`)
     }
@@ -392,10 +379,10 @@ const Dashboard = () => {
                                     {
                                         contents.map(content => {
                                             return <Content
-                                                // className="col"
                                                 key={content}
                                                 contentID={content}
                                                 token={token}
+                                                folderChanged={setFoldersChangedFN}
                                             />
                                         })
                                     }

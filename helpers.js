@@ -72,7 +72,7 @@ const deleteDiscussion = async (discussionID) => {
     const deletedDiscussion = await Discussion.findByIdAndDelete(discussionID, { useFindAndModify: true })
 }
 
-const deleteContent = async (contentID) => {
+const deleteContent = async (contentID, folderID) => {
     const foundContent = await Content.findById(contentID)
     const { courseID, discussion, file } = foundContent
 
@@ -85,6 +85,12 @@ const deleteContent = async (contentID) => {
     const foundCourse = await Course.findById(courseID)
     const newContentArr = foundCourse.content.filter(el => el != contentID)
     await Course.findByIdAndUpdate(courseID, { content: newContentArr },
+        { new: true, runValidators: true, useFindAndModify: true })
+
+    //delete content from [folder.contents] and update the folder with the new array
+    const foundFolder = await Folder.findById(folderID)
+    const newContentsArr = foundFolder.contents.filter(el => el != contentID)
+    await Folder.findByIdAndUpdate(folderID, { contents: newContentsArr },
         { new: true, runValidators: true, useFindAndModify: true })
 
 
