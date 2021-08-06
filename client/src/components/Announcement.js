@@ -13,7 +13,16 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import TextEditor from './TextEditor'
 
 import {
     makeStyles,
@@ -22,6 +31,9 @@ import {
 } from '@material-ui/core/styles';
 
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,35 +50,67 @@ const useStyles = makeStyles((theme) => ({
     },
     threeDots: {
         display: "flex",
-        // alignItems: "center",
-        margin: "auto",
+        alignItems: "center",
+        // margin: "auto",
+        padding: "8px",
         position: "absolute",
-        top: "10%",
+        top: 0,
         // bottom: "10%",
-        right: "0%",
+        right: 0,
     }
 }))
 
-const Announcement = ({ text }) => {
+const Announcement = ({ text, index, courseID }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [openDelete, setOpenDelete] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const [addNewFolderName, setAddNewFolderName] = useState("");
+    const [newText, setNewText] = useState(text);
     const [openMessage, setOpenMessage] = useState(false);
     const [MessageText, setMessageText] = useState();
 
+    const token = localStorage.getItem('token')
+    const author = localStorage.getItem('userID')
+    const role = localStorage.getItem('role')
+
+    const auth = {
+        headers: { token }
+    }
 
     const handleCloseMessage = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpenMessage(false);
+    };
+
+    const handleEdit = async () => {
+        try {
+            const newAnnouncement = newText
+            const formData = { newAnnouncement, courseID, index, author }
+            const res = await axios.patch(`http://localhost:8080/courses/courseAnnouncements/`, formData, auth)
+            setOpenEdit(false)
+            setOpenMessage(true)
+            setMessageText("Edited Successfully !")
+            setAnchorEl(null);
+        } catch (error) {
+            console.log(error.response.data)
+        }
 
     };
-    const role = localStorage.getItem('role')
 
+    const handleConfirmDelete = async () => {
+        try {
+            const res = await axios.delete(`http://localhost:8080/courses/courseAnnouncements/delete/${courseID}/${index}`, auth)
+            setOpenDelete(false);
+            setOpenMessage(true);
+            setMessageText("Deleted Successfully !")
+            setAnchorEl(null);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     function toggleSettings(role) {
         if (role === "staff")
@@ -97,29 +141,105 @@ const Announcement = ({ text }) => {
             )
     }
 
+    const onEditorChange = (value) => {
+        setNewText(value)
+    }
+
     return (
-        <div className="row">
-            <Card
-                className={classes.root}
-            >
-                {/* <CardHeader
+        <>
+            <div className="row">
+                <Card className={classes.root}>
+                    <CardContent>
+                        <Typography variant="subtitle1" component="p">
+                            <div dangerouslySetInnerHTML={{ __html: text }} />
+                        </Typography>
+                    </CardContent>
+                    {toggleSettings(role)}
+                </Card>
+            </div>
 
-                // avatar={studentORInstructor(discussionData.author.role)}
-                // action={toggleSettings(role)}
-                // title={`${discussionData.author.firstName} ${discussionData.author.lastName}`}
-                // subheader={`${discussionData.date} ${discussionData.edited ? "(edited)" : ""}`}
-                /> */}
+            {
+                openDelete &&
+                <Container>
+                    <Dialog
+                        open={openDelete}
+                        onClose={() => setOpenDelete(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{"Delete Announcement ?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Are you sure you want to delete this announcement ?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDelete(false)} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleConfirmDelete} style={{ marginRight: 8 }} color="primary" autoFocus>
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </Container>
+            }
+            {
+                openMessage &&
+                <Snackbar open={openMessage} autoHideDuration={2000} onClose={handleCloseMessage}>
+                    <Alert onClose={handleCloseMessage} severity="success">
+                        {MessageText}
+                    </Alert>
+                </Snackbar>
 
-                <CardContent>
-                    <Typography variant="subtitle1" component="p">
-                        <div dangerouslySetInnerHTML={{ __html: text }} />
-                    </Typography>
-                    {/* <MoreVertIcon className={classes.threeDots} /> */}
-                </CardContent>
-                {toggleSettings(role)}
-            </Card>
+            }
 
-        </div>
+            {/* {openMessage && openDelete &&
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2500)
+            } */}
+
+            {
+                openEdit &&
+                <>
+                    <Dialog open={openEdit} onClose={() => setOpenEdit(false)} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Edit Announcement</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                To edit announcement, please enter new text here.
+                            </DialogContentText>
+                            <div class="app">
+                                <TextEditor
+                                    align="center"
+                                    value={newText}
+                                    onEditorChange={onEditorChange}
+                                />
+                            </div>
+                            {/* <TextField
+                                autoFocus
+                                defaultValue={text}
+                                // value={newText}
+                                onChange={(e) => setNewText(e.target.value)}
+                                margin="dense"
+                                id="name"
+                                label="New Text"
+                                type="text"
+                                fullWidth
+                            /> */}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenEdit(false)} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleEdit} color="primary">
+                                Edit
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
+            }
+        </>
     )
 }
 

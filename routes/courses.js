@@ -446,8 +446,9 @@ router.patch("/courseAnnouncements", async (req, res) => {
 
         //add notification
         const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
-        const NotificationType = "course"
-        const text = `${authorFullName} updated the announcements ${notificationDetails}`
+        const courseAnnouncementIndex = foundCourse.courseAnnouncement.length
+        const NotificationType = `announcement#${courseAnnouncementIndex}`
+        const text = `${authorFullName} updated an announcement ${notificationDetails}`
         const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
         const savedNotification = await newNotification.save()
 
@@ -479,17 +480,17 @@ router.patch("/courseAnnouncements", async (req, res) => {
 
 });
 
-router.delete("/courseAnnouncements/delete", async (req, res) => {
+router.delete("/courseAnnouncements/delete/:courseID/:index", async (req, res) => {
     try {
-        const { courseID, index, author } = req.body
+        const { courseID, index } = req.params
         if (!courseID)
             return res.status(400).json("courseID is required");
 
         if (!index)
             return res.status(400).json("index is required");
 
-        if (!author)
-            return res.status(400).json("author is required");
+        // if (!author)
+        //     return res.status(400).json("author is required");
         // const courseAnnouncementArr = (await Course.findById(courseID)).courseAnnouncement
         // courseAnnouncementArr[index] = newAnnouncement
 
@@ -504,36 +505,36 @@ router.delete("/courseAnnouncements/delete", async (req, res) => {
             { new: true, runValidators: true, useFindAndModify: true })
 
 
-        const foundAuthor = await User.findById(author)
-        const courseNameCode = `${foundCourse.name} (${foundCourse.code})`
-        const notificationDetails = `of ${courseNameCode} course`
+        // const foundAuthor = await User.findById(author)
+        // const courseNameCode = `${foundCourse.name} (${foundCourse.code})`
+        // const notificationDetails = `from ${courseNameCode} course`
 
-        //add notification
-        const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
-        const NotificationType = "course"
-        const text = `${authorFullName} updated the announcements ${notificationDetails}`
-        const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
-        const savedNotification = await newNotification.save()
+        // //add notification
+        // const authorFullName = `${foundAuthor.firstName} ${foundAuthor.lastName}`
+        // const NotificationType = `announcement${-1}`
+        // const text = `${authorFullName} deleted an announcement ${notificationDetails}`
+        // const newNotification = new Notification({ role: foundAuthor.role, text, type: NotificationType, refID: courseID })
+        // const savedNotification = await newNotification.save()
 
-        //send the notification 
-        const studentsArr = foundCourse.students
-        const staffArr = foundCourse.staff
+        // //send the notification 
+        // const studentsArr = foundCourse.students
+        // const staffArr = foundCourse.staff
 
-        for (const studentID of studentsArr) {
-            if (studentID != author) {
-                await User.findByIdAndUpdate(studentID, { $addToSet: { notifications: [savedNotification._id] } },
-                    { new: true, runValidators: true, useFindAndModify: true })
-            }
+        // for (const studentID of studentsArr) {
+        //     if (studentID != author) {
+        //         await User.findByIdAndUpdate(studentID, { $addToSet: { notifications: [savedNotification._id] } },
+        //             { new: true, runValidators: true, useFindAndModify: true })
+        //     }
 
-        }
+        // }
 
-        for (const staffID of staffArr) {
-            if (staffID != author) {
-                await User.findByIdAndUpdate(staffID, { $addToSet: { notifications: [savedNotification._id] } },
-                    { new: true, runValidators: true, useFindAndModify: true })
-            }
+        // for (const staffID of staffArr) {
+        //     if (staffID != author) {
+        //         await User.findByIdAndUpdate(staffID, { $addToSet: { notifications: [savedNotification._id] } },
+        //             { new: true, runValidators: true, useFindAndModify: true })
+        //     }
 
-        }
+        // }
 
         res.json(foundCourse.courseAnnouncement)
     } catch (error) {

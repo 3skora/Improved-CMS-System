@@ -131,7 +131,7 @@ const CourseAnnouncement = () => {
                                     </Typography>
                                     :
                                     (course.courseAnnouncement).map((text, index2) => {
-                                        return <Announcement key={index2} text={text} />
+                                        return <Announcement key={index2} index={index2 + ""} text={text} courseID={course._id} />
                                     })
                                 }
                             </TabPanel>
