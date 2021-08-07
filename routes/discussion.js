@@ -275,10 +275,7 @@ router.delete("/:postID/:userID", async (req, res) => {
         if (!foundPost)
             return res.status(400).json("Post not found");
 
-        const activities = (await User.findById(userID)).activities
-        const newActivitiesArr = activities.filter(el => el != postID)
-        await User.findByIdAndUpdate(userID, { activities: newActivitiesArr },
-            { new: true, runValidators: true, useFindAndModify: true })
+
         deleteDiscussion(postID)
         res.send("discussion deleted")
 
@@ -501,8 +498,8 @@ router.post("/:commentID/reply", async (req, res) => {
             { new: true, runValidators: true, useFindAndModify: true })
 
         //add discussion to activities array 
-        await User.findByIdAndUpdate(savedReply.author, { $addToSet: { activities: [postID] } },
-            { new: true, runValidators: true, useFindAndModify: true })
+        // await User.findByIdAndUpdate(savedReply.author, { $addToSet: { activities: [postID] } },
+        //     { new: true, runValidators: true, useFindAndModify: true })
 
 
 

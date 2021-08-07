@@ -89,6 +89,7 @@ export default function SearchAppBar() {
     const handleSubmit = (e) => {
         e.preventDefault();
         history.push(`/dashboard/search/${searchText}`)
+        history.go()
     }
 
     return (
@@ -115,7 +116,7 @@ export default function SearchAppBar() {
                         }}
                         inputProps={{ 'aria-label': 'search' }}
                         value={searchText}
-                        onChange={(e) => { console.log(searchText); setSearchText(e.target.value) }}
+                        onChange={(e) => { setSearchText(e.target.value) }}
                     />
                 </form>
             </div>

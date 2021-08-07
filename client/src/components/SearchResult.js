@@ -56,7 +56,6 @@ const SearchResult = () => {
     useEffect(() => {
         axios.get(`http://localhost:8080/search/?q=${searchText}`, auth)
             .then(res => {
-                console.log(res.data)
                 setSearchResult(res.data)
             })
             .catch(err => console.log(err.response.data))

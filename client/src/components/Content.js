@@ -204,7 +204,10 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
             setMessageText("Edited Successfully !")
             setAnchorEl(null);
             folderChanged(true);
-            window.location.reload()
+            if (!newFile)
+                window.location.reload()
+            // setTimeout(() => window.location.reload(), 2000)
+
 
         } catch (error) {
             console.log(error.response.data)
@@ -220,7 +223,8 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
             setMessageText("Deleted Successfully !")
             setAnchorEl(null);
             folderChanged(true)
-            window.location.reload()
+            setTimeout(() => window.location.reload(), 2000)
+
 
         } catch (error) {
             console.log(error)

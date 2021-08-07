@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleTabs({ selectedTab, type, search, watch, notification , allAnnouncements}) {
+export default function SimpleTabs({ selectedTab, type, search, watch, notification, allAnnouncements }) {
     const classes = useStyles();
     const [value, setValue] = React.useState(selectedTab);
     let history = useHistory()
@@ -76,6 +76,7 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
 
     const handleClickDashboard = () => {
         history.push("/dashboard/")
+        history.go()
     }
 
     const handleClickDiscussion = () => {
@@ -93,9 +94,10 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
 
     let { discussionID } = useParams()
 
-    useEffect(() => {
-
-    }, [location])
+    // useEffect(() => {
+    //     console.log()
+    //     history.go()
+    // }, [])
 
     return (
         <div className={classes.root}>
@@ -115,7 +117,7 @@ export default function SimpleTabs({ selectedTab, type, search, watch, notificat
                 {notification ? <Discussion discussionID={discussionID} /> : type === "general" ? <AllDiscussions /> : <ContentDiscussion />}
             </TabPanel>
             <TabPanel value={value} index={2}>
-                {allAnnouncements ? <CourseAnnouncement /> : <OneAnnouncement /> }
+                {allAnnouncements ? <CourseAnnouncement /> : <OneAnnouncement />}
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <NotificationPage />

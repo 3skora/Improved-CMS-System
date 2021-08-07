@@ -4,6 +4,7 @@ const Content = require("./models/Content")
 const Discussion = require("./models/Discussion")
 const Comment = require("./models/Comment")
 const Folder = require("./models/Folder")
+const User = require("./models/User")
 
 // const { cloudinary } = require("./cloudinary")
 const fs = require('fs')
@@ -68,8 +69,14 @@ const deleteDiscussion = async (discussionID) => {
     for (let c of foundPost.comments) {
         await Comment.findByIdAndDelete(c, { useFindAndModify: true })
     }
-    //Delete discussion itself from discussions DB
-    const deletedDiscussion = await Discussion.findByIdAndDelete(discussionID, { useFindAndModify: true })
+    //Delete discussion from activities
+    const activities = (await User.findById(foundPost.author)).activities
+    const newActivitiesArr = activities.filter(el => el != postID)
+    await User.findByIdAndUpdate(userID, { activities: newActivitiesArr },
+        { new: true, runValidators: true, useFindAndModify: true })
+
+//Delete discussion itself from discussions DB
+const deletedDiscussion = await Discussion.findByIdAndDelete(discussionID, { useFindAndModify: true })
 }
 
 const deleteContent = async (contentID, folderID) => {
