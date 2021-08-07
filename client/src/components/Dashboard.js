@@ -151,7 +151,6 @@ const Dashboard = () => {
         headers: { token }
     }
 
-    console.log(foldersChanged)
 
     useEffect(() => {
         if (!rootFolder) {

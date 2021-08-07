@@ -26,6 +26,16 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import { Grid, ButtonBase, Container, Card, CardActions, CardContent, Button, Paper, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core/';
 
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useHistory,
+    useLocation,
+    useParams,
+} from "react-router-dom";
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -126,6 +136,14 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
     const [MessageText, setMessageText] = useState();
 
     let isThreeDotsClicked = false;
+
+    let { folderID } = useParams()
+    const token = localStorage.getItem('token')
+
+    const auth = {
+        headers: { token }
+    }
+
     const handleCloseMessage = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -153,6 +171,21 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
             console.log(error.response.data)
         }
 
+    }
+
+    const handleConfirmDelete = async () => {
+        try {
+            const res = await axios.delete(`http://localhost:8080/contents/${folderID}`, auth)
+            setOpenDelete(false);
+            setOpenMessage(true);
+            setMessageText("Deleted Successfully !")
+            setAnchorEl(null);
+            folderChanged(true)
+            // window.location.reload()
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleClick = (e) => {
@@ -236,7 +269,7 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
                                 onChange={(e) => setAddNewFolderName(e.target.value)}
                                 margin="dense"
                                 id="name"
-                                label="New Text"
+                                label="Folder Name"
                                 type="text"
                                 fullWidth
                             />
@@ -261,6 +294,33 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
                     </Alert>
                 </Snackbar>
 
+            }
+
+            {
+                openDelete &&
+                <>
+                    <Dialog
+                        open={openDelete}
+                        onClose={() => setOpenDelete(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{"Delete Folder ?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Are you sure you want to delete this folder ?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDelete(false)} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleConfirmDelete} style={{ marginRight: 8 }} color="primary" autoFocus>
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
             }
 
         </>

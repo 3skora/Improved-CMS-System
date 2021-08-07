@@ -127,14 +127,47 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
     }
 });
 
-router.delete("/:folderID/:contentID", authStaff, async (req, res) => {
+router.patch("/:contentID", upload.single('file'), async (req, res) => {
     try {
-        const { contentID , folderID} = req.params
+        const { contentID } = req.params
+        const { newTitle, newTag } = req.body
+        const newFile = req.file
+        console.log("🚀 ~ file: content.js ~ line 135 ~ router.patch ~ newFile", newFile)
         const foundContent = await Content.findById(contentID)
         if (!foundContent)
             return res.status(400).json("Content not found");
 
-        deleteContent(contentID , folderID)
+        if (newTitle) {
+            await Content.findByIdAndUpdate(contentID, { title: newTitle },
+                { new: true, runValidators: true, useFindAndModify: true })
+        }
+        if (newTag) {
+            const tagForm = tagHelper(newTag)
+            await Content.findByIdAndUpdate(contentID, { tag: tagForm },
+                { new: true, runValidators: true, useFindAndModify: true })
+        }
+        if (newFile) {
+            await Content.findByIdAndUpdate(contentID, { file: newFile },
+                { new: true, runValidators: true, useFindAndModify: true })
+        }
+
+        res.send("content edited");
+
+    } catch (err) {
+        console.log("catch error")
+        console.log(err)
+        res.json(err);
+    }
+});
+
+router.delete("/:folderID/:contentID", authStaff, async (req, res) => {
+    try {
+        const { contentID, folderID } = req.params
+        const foundContent = await Content.findById(contentID)
+        if (!foundContent)
+            return res.status(400).json("Content not found");
+
+        deleteContent(contentID, folderID)
         res.send("content deleted");
 
     } catch (err) {

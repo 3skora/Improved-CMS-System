@@ -82,6 +82,10 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
     const [openMessage, setOpenMessage] = useState(false);
     const [MessageText, setMessageText] = useState();
 
+    const [newTitle, setNewTitle] = useState("");
+    const [newTag, setNewTag] = useState("");
+    const [newFile, setNewFile] = useState("");
+
     const author = localStorage.getItem('userID')
     const role = localStorage.getItem('role')
 
@@ -183,20 +187,30 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
         setOpenMessage(false);
     };
 
-    // const handleEdit = async () => {
-    //     try {
-    //         const newAnnouncement = newText
-    //         const formData = { newAnnouncement, courseID, index, author }
-    //         const res = await axios.patch(`http://localhost:8080/courses/courseAnnouncements/`, formData, auth)
-    //         setOpenEdit(false)
-    //         setOpenMessage(true)
-    //         setMessageText("Edited Successfully !")
-    //         setAnchorEl(null);
-    //     } catch (error) {
-    //         console.log(error.response.data)
-    //     }
+    const handleEdit = async (e) => {
+        try {
+            // const newAnnouncement = newText
+            e.preventDefault();
+            e.stopPropagation();
+            const formData = new FormData();
+            formData.append("newTitle", newTitle)
+            formData.append("newTag", newTag)
+            formData.append("file", newFile)
+            // const formData = { newTitle, newTag, newFile }
+            // console.log("🚀 ~ file: Content.js ~ line 196 ~ handleEdit ~ formData", formData)
+            const res = await axios.patch(`http://localhost:8080/contents/${contentID}`, formData, auth)
+            setOpenEdit(false)
+            setOpenMessage(true)
+            setMessageText("Edited Successfully !")
+            setAnchorEl(null);
+            folderChanged(true);
+            window.location.reload()
 
-    // };
+        } catch (error) {
+            console.log(error.response.data)
+        }
+
+    };
 
     const handleConfirmDelete = async () => {
         try {
@@ -205,7 +219,7 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
             setOpenMessage(true);
             setMessageText("Deleted Successfully !")
             setAnchorEl(null);
-            // folderChanged(true)
+            folderChanged(true)
             window.location.reload()
 
         } catch (error) {
@@ -281,6 +295,97 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
                     </Alert>
                 </Snackbar>
 
+            }
+
+            {
+                openEdit &&
+                <>
+                    <Dialog open={openEdit} onClose={() => { setOpenEdit(false); setNewFile("") }} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Edit Content</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                To edit content, please enter new content here.
+                            </DialogContentText>
+                            {/* <TextField
+                                autoFocus
+                                defaultValue={folderName}
+                                // value={addNewFolderName}
+                                onChange={(e) => setAddNewFolderName(e.target.value)}
+                                margin="dense"
+                                id="name"
+                                label="New Text"
+                                type="text"
+                                fullWidth
+                            /> */}
+
+                            {/* <form encType="multipart/form-data"> */}
+                            <div className="my-2">
+                                <label className="form-label" htmlFor="title">
+                                    Title
+                                </label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    id="title"
+                                    defaultValue={content.title}
+                                    onChange={(event) => setNewTitle(event.target.value)}
+                                ></input>
+                            </div>
+
+                            <div className="my-2">
+                                <label className="form-label" htmlFor="tag">
+                                    Tags
+                                </label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    placeholder="Please separate tags between ','"
+                                    id="tag"
+                                    defaultValue={content.tag}
+                                    onChange={(event) => setNewTag(event.target.value)}
+                                ></input>
+                            </div>
+
+                            <div className="my-2">
+                                <label className="form-label" htmlFor="file">
+                                    File
+                                </label>
+                                <input
+                                    className="form-control"
+                                    type="file"
+                                    id="file"
+                                    name="file"
+                                    // defaultValue={content.file.originalname}
+                                    // defaultValue={(event) => setNewFile(event.target.files[0])}
+                                    onChange={(event) => setNewFile(event.target.files[0])}
+                                ></input>
+                                <div>
+                                    {
+                                        !newFile &&
+                                        <>
+                                            <span>choosen file :  </span>
+                                            <a href={`http://localhost:8080/contents/${contentID}/download`}>
+                                                {content.file.originalname}
+                                            </a>
+                                        </>
+
+                                    }
+
+
+                                </div>
+                            </div>
+                            {/* </form> */}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button className="m-1" onClick={() => { setOpenEdit(false); }} color="primary" variant="contained">
+                                Cancel
+                            </Button>
+                            <Button className="m-1" onClick={handleEdit} color="primary" variant="contained">
+                                Edit
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
             }
         </>
 
