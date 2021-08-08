@@ -28,6 +28,7 @@ import TextField from '@material-ui/core/TextField';
 import UploadContent from "../components/staff/UploadContent"
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import NavFolder from "./NavFolder"
 
 
@@ -50,7 +51,18 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.text.secondary,
     },
 
-
+    progress: {
+        display: 'flex',
+        margin: "0% auto",
+        alignItems: "center",
+        position: "absolute",
+        top: "50%",
+        bottom: "50%",
+        right: "50%",
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        }
+    },
 
     // rootPaper: {
     //     display: "flex",
@@ -243,7 +255,8 @@ const Dashboard = () => {
     }
 
     return (
-        <div>
+        <div className="container-fluid">
+            {/* ? <CircularProgress color="secondary" size={63} className={classes.progress} /> : */}
             {subFolders &&
                 <div className={classes.rootAccordion}>
                     {navs.length !== 0 && <NavFolder

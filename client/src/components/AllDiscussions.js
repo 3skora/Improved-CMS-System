@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import PostDiscussion from "./PostDiscussion";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 function TabPanel(props) {
@@ -65,7 +67,19 @@ const useStyles = makeStyles((theme) => ({
     myDivider: {
         margin: "10px 0px",
         border: `1px solid ${theme.palette.divider}`
-    }
+    },
+    progress: {
+        display: 'flex',
+        margin: "0% auto",
+        alignItems: "center",
+        position: "absolute",
+        top: "50%",
+        bottom: "50%",
+        right: "50%",
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        }
+    },
 }));
 
 
