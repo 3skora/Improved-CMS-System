@@ -69,7 +69,7 @@ const Course = () => {
     };
 
     return (
-        <div className="container" style={{ margin: "auto 200px", alignItems: 'center' }}>
+        <div className="container-fluid" style={{ margin: "auto 20%", alignItems: 'center' }}>
             <form onSubmit={handelSubmit}>
                 <TextField
                     align="center"

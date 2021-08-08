@@ -16,12 +16,12 @@ router.post("/", async (req, res) => {
         if (error) {
             return res.status(400).json(error.details[0].message);
         }
-        const { courses } = req.body
-        for (let courseID of courses) {
-            let found = await Course.findById(courseID)
-            if (!found)
-                return res.status(400).json(`course ${courseID} not found`);
-        }
+        // const { courses } = req.body
+        // for (let courseID of courses) {
+        //     let found = await Course.findById(courseID)
+        //     if (!found)
+        //         return res.status(400).json(`course ${courseID} not found`);
+        // }
         const newDepartment = new Department(req.body);
         const savedDepartment = await newDepartment.save();
         res.json(savedDepartment);

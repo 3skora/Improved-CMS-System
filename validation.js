@@ -40,7 +40,7 @@ module.exports.assignCourseValidation = data => {
 module.exports.departmentValidation = data => {
     const schema = Joi.object({
         name: Joi.string().required(),
-        courses: Joi.array().items(Joi.string()).required(),
+        // courses: Joi.array().items(Joi.string()).required(),
     })
 
     return schema.validate(data);

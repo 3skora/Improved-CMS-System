@@ -22,6 +22,8 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import AccountMenu from "../../components/AccountMenu";
+import AddSemester from "../../components/admin/AddSemester";
+import AddDepartment from "../../components/admin/AddDepartment";
 
 
 function TabPanel(props) {
@@ -72,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
-        height: 224,
+        // height: 224,
     },
     tabs: {
         borderRight: `1px solid ${theme.palette.divider}`,
@@ -114,13 +116,15 @@ const HomeAdmin = () => {
                     onChange={handleChange}
                     aria-label="Vertical tabs example"
                     className={classes.tabs}
-                // variant="scrollable"
+                    variant="fullWidth"
+                // scrollButtons="off"
                 >
                     <Tab label="Add Course" {...a11yProps(0)} />
                     <Tab label="Add User" {...a11yProps(1)} />
                     <Tab label="Assign Student Courses" {...a11yProps(2)} />
                     <Tab label="Assign staff Courses" {...a11yProps(3)} />
-                    <Tab label="Item Five" {...a11yProps(4)} />
+                    <Tab label="Add Department" {...a11yProps(4)} />
+                    <Tab label="Add Semester" {...a11yProps(5)} />
                 </Tabs>
                 <TabPanel value={value} index={0}>
                     <Course />
@@ -135,7 +139,10 @@ const HomeAdmin = () => {
                     <AssignCourses role="staff" />
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                    Item Five
+                    <AddDepartment />
+                </TabPanel>
+                <TabPanel value={value} index={5}>
+                    <AddSemester />
                 </TabPanel>
             </div>
 
