@@ -222,7 +222,7 @@ const ContentCard = ({ contentID, token, searchText, folderChanged }) => {
             setOpenMessage(true);
             setMessageText("Deleted Successfully !")
             setAnchorEl(null);
-            folderChanged(true)
+            // folderChanged(true)
             setTimeout(() => window.location.reload(), 2000)
 
 

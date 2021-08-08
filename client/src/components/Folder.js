@@ -175,13 +175,13 @@ const Folder = ({ folderName, rootFolder, folderClicked, role, threeDots, add, i
 
     const handleConfirmDelete = async () => {
         try {
-            const res = await axios.delete(`http://localhost:8080/contents/${folderID}`, auth)
+            const res = await axios.delete(`http://localhost:8080/courses/deleteFolder/${rootFolder}`, auth)
             setOpenDelete(false);
             setOpenMessage(true);
             setMessageText("Deleted Successfully !")
             setAnchorEl(null);
-            folderChanged(true)
-            // window.location.reload()
+            // folderChanged(true)
+            setTimeout(() => window.location.reload(), 1000)
 
         } catch (error) {
             console.log(error)

@@ -77,6 +77,8 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
         if (!foundFolder)
             return res.status(400).json(`Folder ${folderID} not found`);
 
+        const { courseID } = req.body
+
         //save content in DB
         const newContent = new Content({ author: req.user.id, folderID, ...req.body, file: req.file, })
         const savedContent = await newContent.save()
@@ -86,7 +88,7 @@ router.post("/upload/:folderID", authStaff, upload.single('file'), async (req, r
         await Folder.findByIdAndUpdate(folderID, { $addToSet: { contents: [savedContent._id] } },
             { new: true, runValidators: true, useFindAndModify: true })
 
-        const { courseID } = req.body
+
         const courseData = await Course.findById(courseID)
 
         //add notification

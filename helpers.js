@@ -71,12 +71,12 @@ const deleteDiscussion = async (discussionID) => {
     }
     //Delete discussion from activities
     const activities = (await User.findById(foundPost.author)).activities
-    const newActivitiesArr = activities.filter(el => el != postID)
-    await User.findByIdAndUpdate(userID, { activities: newActivitiesArr },
+    const newActivitiesArr = activities.filter(el => el != discussionID)
+    await User.findByIdAndUpdate(foundPost.author, { activities: newActivitiesArr },
         { new: true, runValidators: true, useFindAndModify: true })
 
-//Delete discussion itself from discussions DB
-const deletedDiscussion = await Discussion.findByIdAndDelete(discussionID, { useFindAndModify: true })
+    //Delete discussion itself from discussions DB
+    const deletedDiscussion = await Discussion.findByIdAndDelete(discussionID, { useFindAndModify: true })
 }
 
 const deleteContent = async (contentID, folderID) => {
@@ -160,26 +160,64 @@ const tagHelper = (tag) => {
     return result.join(", ")
 }
 
-let result = []
-let getAllBelow = async (folderID) => {
-    const folderData = await Folder.findById(folderID)
-    if (folderData.subFolders.length === 0)
-        return
 
-    else {
-        for (let index = 0; index < folderData.subFolders.length; index++) {
-            console.log("🚀 ~ file: helpers.js ~ line 161 ~ deleteDiscussion ~ foundPost.typeID", foundPost.typeID)
-            console.log("🚀 ~ file: helpers.js ~ line 161 ~ deleteDiscussion ~ foundPost.typeID", foundPost.typeID)
-            const element = folderData.subFolders[index];
-            result.push(element)
-            await getAllBellow(element)
-        }
-    }
-    // console.log("deleted result => ", result)
-    return result
+let getAllBelow = (folderID) => {
+    Folder.findById(folderID)
+        .then(folderData => {
+
+            if (folderData.subFolders.length === 0) {
+                console.log("deleted result => ", result)
+                return result
+            }
+
+            else {
+                for (let index = 0; index < folderData.subFolders.length; index++) {
+                    const element = folderData.subFolders[index];
+                    result.push(element)
+                    return getAllBellow(element)
+                }
+            }
+        })
+        .catch(err => console.log(err))
 }
 
+let result = []
+let recursivelyDelete = (folderID) => {
+    let item
+    let temp = []
+    return Folder.findById(folderID)
+        .then(folderData => {
+            item = folderData
+
+            if (item.subFolders.length !== 0) {
+                for (let index = 0; index < item.subFolders.length; index++) {
+                    const element = item.subFolders[index];
+                    result.push(element)
+                    return recursivelyDelete(element)
+                }
+            }
+
+            else {
+                temp = result
+                result = []
+                return temp
+            }
+
+        })
+}
+
+let deleteFolderContents = async (folderID) => {
+
+    const data = await Folder.findById(folderID)
+    for (const contentID of data.contents) {
+        await deleteContent(contentID, folderID)
+    }
+
+
+    await Folder.findByIdAndDelete(folderID)
+}
 module.exports = {
     deleteComment, DiscussionCourseHelper, DiscussionContentHelper,
-    deleteDiscussion, deleteContent, deleteCourse, deleteDepartment, tagHelper, getAllBelow
+    deleteDiscussion, deleteContent, deleteCourse, deleteDepartment, tagHelper,
+    getAllBelow, recursivelyDelete, deleteFolderContents
 }

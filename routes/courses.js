@@ -7,7 +7,7 @@ const Semester = require("../models/Semester");
 const Folder = require("../models/Folder");
 const Notification = require("../models/Notification")
 
-const { deleteCourse, deleteContent, getAllBelow } = require("../helpers")
+const { deleteCourse, deleteContent, getAllBelow, recursivelyDelete, deleteFolderContents } = require("../helpers")
 
 
 const { courseValidation, assignCourseValidation } = require("../validation");
@@ -274,15 +274,17 @@ router.patch("/editFolder/:rootFolderID", async (req, res) => {
 router.delete("/deleteFolder/:rootFolderID", async (req, res) => {
     try {
         const { rootFolderID } = req.params
+        let allFolders = []
+        recursivelyDelete(rootFolderID).then(data => {
+            allFolders = data.reverse()
+            allFolders.push(rootFolderID)
 
-        const folderData = await Folder.findById(rootFolderID)
-
-        //delete contents of folder from DB and delete its discussions bla bla
-        for (const contentID of folderData.contents) {
-            deleteContent(contentID)
-        }
-        res.json(folderData)
-
+            //delete contents of folder from DB and delete its discussions bla bla
+            for (const folderID of allFolders) {
+                deleteFolderContents(folderID)
+            }
+        })
+        res.json("folder deleted")
     } catch (error) {
         res.json(error)
     }
