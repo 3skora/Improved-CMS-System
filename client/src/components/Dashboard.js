@@ -256,8 +256,7 @@ const Dashboard = () => {
 
     return (
         <div className="container-fluid">
-            {/* ? <CircularProgress color="secondary" size={63} className={classes.progress} /> : */}
-            {subFolders &&
+            {!subFolders ? <CircularProgress color="secondary" className={classes.progress} /> :
                 <div className={classes.rootAccordion}>
                     {navs.length !== 0 && <NavFolder
                         isExpand={isExpand}
