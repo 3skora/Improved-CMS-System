@@ -94,7 +94,7 @@ const Login = (props) => {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    GUC Virtual Classroom
                 </Typography>
                 <form
                     className={classes.form}
